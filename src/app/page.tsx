@@ -3,7 +3,6 @@
 "use client";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -166,7 +165,7 @@ const slider = [
 export default function Home() {
   return (
     <div>
-      <div className="hero-section">
+      <div className="hero-section px-20">
         <img
           className="px-10 max-w-screen"
           src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/w_1349,c_limit/5b67cda3-a72e-4059-8656-1d102813f808/nike-just-do-it.jpg"
@@ -209,16 +208,14 @@ export default function Home() {
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
-                  <h3 className="mt-6 text-regular text-gray-900 flex items-center justify-between">
+                  <h3 className="mt-6 text-regular font-medium text-gray-900 flex items-center justify-between">
                     <span>{callout.name}</span>
-                    <span className="text-black">
+                    <span className="text-black pr-4">
                       {" "}
-                      {callout.price.toLocaleString()},000 ₫
+                      {callout.price.toLocaleString()},000₫
                     </span>
                   </h3>
-                  <p className="text-sm  text-gray-500">
-                    {callout.description}
-                  </p>
+                  <p className="text-gray-500">{callout.description}</p>
                 </div>
               ))}
             </div>
@@ -254,8 +251,6 @@ export default function Home() {
           navigation
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log("slide change")}
         >
           {slider.map((callout) => (
             <SwiperSlide>
@@ -267,14 +262,14 @@ export default function Home() {
                     className="h-full w-full object-cover object-center"
                   />
                 </div>
-                <h3 className="mt-6 text-regular text-gray-900 flex items-center justify-between">
+                <h3 className="mt-6 text-regular font-medium text-gray-900 flex items-center justify-between">
                   <span>{callout.name}</span>
-                  <span className="text-black">
+                  <span className="text-black pr-4">
                     {" "}
-                    {callout.price.toLocaleString()},000 ₫
+                    {callout.price.toLocaleString()},000₫
                   </span>
                 </h3>
-                <p className="text-sm  text-gray-500">{callout.description}</p>
+                <p className=" text-gray-500">{callout.description}</p>
               </div>
             </SwiperSlide>
           ))}
@@ -309,7 +304,7 @@ export default function Home() {
       {/* products */}
       <div className="">
         <div className=" px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
+          <div className=" py-16 sm:py-24 lg:max-w-none lg:py-32">
             <h2 className="text-xl text-gray-900">Retro running</h2>
 
             <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
@@ -322,16 +317,14 @@ export default function Home() {
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
-                  <h3 className="mt-6 text-regular text-gray-900 flex items-center justify-between">
+                  <h3 className="mt-6 font-medium text-gray-900 flex items-center justify-between">
                     <span>{callout.name}</span>
-                    <span className="text-black">
+                    <span className="text-black pr-4">
                       {" "}
-                      {callout.price.toLocaleString()},000 ₫
+                      {callout.price.toLocaleString()},000₫
                     </span>
                   </h3>
-                  <p className="text-sm  text-gray-500">
-                    {callout.description}
-                  </p>
+                  <p className=" text-gray-500">{callout.description}</p>
                 </div>
               ))}
             </div>

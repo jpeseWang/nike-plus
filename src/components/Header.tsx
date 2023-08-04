@@ -10,10 +10,10 @@ import {
   QuestionMarkCircleIcon,
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-import jumpman from "../assets/jumpman.svg.png";
-import nike from "../assets/nike.svg.png";
+import jumpman from "../assets/images/jumpman.svg.png";
+import nike from "../assets/images/nike.svg.png";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 const navigation = [
   {
     name: "Find a Store",
@@ -123,7 +123,7 @@ const navigation2 = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
-
+  const router = useRouter();
   const handleMouseEnter = (index: any) => {
     setActiveItem(index);
   };
@@ -139,7 +139,12 @@ export default function Header() {
       >
         <a href="#" className="-m-1.5 p-1.5">
           <span className="sr-only">Your Company</span>
-          <Image className="h-6 w-auto" src={jumpman} alt="" />
+          <Image
+            className="h-6 w-auto"
+            src={jumpman}
+            alt=""
+            onClick={() => router.push("/")}
+          />
         </a>
         <div className="flex lg:hidden">
           <button
@@ -174,7 +179,12 @@ export default function Header() {
       >
         <a href="#" className="-m-1.5 p-1.5">
           <span className="sr-only">Your Company</span>
-          <Image className="h-6 w-auto" src={nike} alt="" />
+          <Image
+            className="h-6 w-auto"
+            src={nike}
+            alt=""
+            onClick={() => router.push("/")}
+          />
         </a>
 
         <div className="hidden lg:flex content-center pl-60">
