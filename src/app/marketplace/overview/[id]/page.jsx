@@ -19,8 +19,9 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
+const API_HOSTNAME = process.env.API_HOSTNAME || "localhost:3000";
 async function getData(id) {
-  const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+  const res = await fetch(`http://${API_HOSTNAME}/api/products${id}`, {
     cache: "no-store",
   });
 
@@ -30,24 +31,6 @@ async function getData(id) {
 
   return res.json();
 }
-
-// export default function ProductOverview({ params }) {
-//   const [data, setData] = useState({});
-
-//   useEffect(() => {
-//     getData(params.id)
-//       .then((data) => setData(data))
-//       .catch((error) => console.error(error));
-//   }, [params.id]);
-
-//   return (
-//     <main>
-//       <div>
-//         <div>{data.name}</div>
-//       </div>
-//     </main>
-//   );
-// }
 
 const navigation = {
   categories: [
