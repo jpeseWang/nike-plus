@@ -20,7 +20,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
 async function getData(id) {
-  const res = await fetch(`http://jpesewang.com/api/products/${id}`, {
+  const res = await fetch(`https://nike-plus.vercel.app/api/products/${id}`, {
     cache: "no-store",
   });
 

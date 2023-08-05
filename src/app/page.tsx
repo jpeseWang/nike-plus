@@ -170,7 +170,7 @@ export default function Home() {
     <div>
       <header className="bg-gray-100">
         <div
-          className="items-center mx-40 p-2 lg:px-8 text-center min-w-2"
+          className="items-center mx-10 p-2 sm:px-40 lg:px-8 text-center min-w-2"
           aria-label="Global"
         >
           <p className="font-semibold ">New Styles on Sale:</p>

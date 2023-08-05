@@ -1,4 +1,4 @@
-export default function Loading() {
+export default function LoadingComponent() {
   return (
     <div role="status" className="h-screen flex justify-center items-center">
       <svg

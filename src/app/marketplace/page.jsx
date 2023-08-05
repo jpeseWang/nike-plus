@@ -22,6 +22,7 @@ import {
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
+import LoadingComponent from "../loading";
 const navigation = {
   categories: [
     {
@@ -296,7 +297,7 @@ const footerNavigation = {
 };
 
 async function getData() {
-  const res = await fetch("http://localhost:3000/api/products");
+  const res = await fetch("https://nike-plus.vercel.app/api/products");
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -593,32 +594,39 @@ export default function Example() {
               </form>
 
               {/* Product grid */}
-              <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3 lg:col-span-4">
-                {data.map((product) => (
-                  <a
-                    key={product._id}
-                    href={`/marketplace/overview/${product._id}`}
-                    className="group text-sm"
-                  >
-                    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
-                      <img
-                        src={product.imageSrc}
-                        alt={product.imageAlt}
-                        className="h-full w-full object-cover object-center"
-                      />
-                    </div>
-                    <h3 className="mt-4 font-medium text-base text-gray-900">
-                      {product.name}
-                    </h3>
-                    <p className=" text-gray-500 text-base font-light">
-                      {product.type}
-                    </p>
-                    <p className="mt-2 text-medium font-medium text-base text-gray-900">
-                      ${product.price}
-                    </p>
-                  </a>
-                ))}
-              </div>
+              {getData() != null ? (
+                <>
+                  {" "}
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-3 lg:col-span-4">
+                    {data.map((product) => (
+                      <a
+                        key={product._id}
+                        href={`/marketplace/overview/${product._id}`}
+                        className="group text-sm"
+                      >
+                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
+                          <img
+                            src={product.imageSrc}
+                            alt={product.imageAlt}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </div>
+                        <h3 className="mt-4 font-medium text-base text-gray-900">
+                          {product.name}
+                        </h3>
+                        <p className=" text-gray-500 text-base font-light">
+                          {product.type}
+                        </p>
+                        <p className="mt-2 text-medium font-medium text-base text-gray-900">
+                          ${product.price}
+                        </p>
+                      </a>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <LoadingComponent />
+              )}
             </div>
           </section>
         </main>
