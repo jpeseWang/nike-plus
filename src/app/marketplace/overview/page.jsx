@@ -1,9 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-const API_HOSTNAME = process.env.API_HOSTNAME || "localhost:3000";
 async function getData() {
-  const res = await fetch(`http://${API_HOSTNAME}/api/products`);
+  const res = await fetch("http://jpesewang.com/api/products");
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }

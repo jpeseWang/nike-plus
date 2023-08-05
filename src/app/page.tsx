@@ -203,7 +203,7 @@ export default function Home() {
           <button
             className="bg-black text-white rounded-full px-5 py-1.5 mt-4 sm:mt-6 md:mt-8 hover:bg-gray-500 text-lg"
             onClick={() => {
-              router.push("/marketplace");
+              router.push("/marketplace/category");
             }}
           >
             Shop
