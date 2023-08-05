@@ -160,12 +160,12 @@ export default function Header() {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="hidden lg:flex">
+        <div className="hidden lg:flex ">
           {navigation.map((item) => (
             <a
               key={item.name}
               href={item.href}
-              className="text-sm font-regular leading-6 text-black"
+              className="text-sm font-regular leading-6 text-black hover:text-gray-400"
             >
               {item.name}
               <span className="px-2">|</span>

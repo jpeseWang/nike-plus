@@ -165,63 +165,61 @@ const slider = [
 export default function Home() {
   return (
     <div>
-      <div className="hero-section px-20">
+      <div className="hero-section px-4 sm:px-8 md:px-16 lg:px-20">
         <img
-          className="px-10 max-w-screen"
+          className="px-4 sm:px-10 max-w-full"
           src="https://static.nike.com/a/images/f_auto/dpr_2.0,cs_srgb/w_1349,c_limit/5b67cda3-a72e-4059-8656-1d102813f808/nike-just-do-it.jpg"
           alt=""
         />
 
         <div
-          className="items-center mx-60 p-2 lg:px-8 text-center mt-4"
+          className="items-center mx-auto sm:mx-10 md:mx-20 p-2 sm:p-4 md:p-8 lg:p-12 text-center mt-4"
           aria-label="Global"
         >
-          <p className="text-lg">Nike Training</p>
-
-          <p className="text-7xl font-nike">
-            MADE FOR YOUR <br></br>EVERY MOVE
+          <p className="text-xl sm:text-3xl md:text-4xl">Nike Training</p>
+          <p className="text-3xl sm:text-5xl md:text-7xl font-nike">
+            MADE FOR YOUR <br className="hidden sm:inline" /> EVERY MOVE
           </p>
-          <p className="mt-4">
-            No matter what your workout looks like today or tomorrow, we’ve got{" "}
-            <br></br>
-            the go-to essentials to make every movement count.
+          <p className="mt-4 sm:mt-6 md:mt-8">
+            No matter what your workout looks like today or tomorrow, we’ve got
+            <br className="hidden sm:inline" /> the go-to essentials to make
+            every movement count.
           </p>
-          <button className="bg-black text-white rounded-2xl px-4 py-1 mt-4">
+          <button className="bg-black text-white rounded-2xl px-4 py-1 mt-4 sm:mt-6 md:mt-8">
             Shop
           </button>
         </div>
       </div>
 
       {/* products */}
-      <div className="">
-        <div className="mx-20 px-4 sm:px-6 lg:px-8">
-          <div className=" max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
-            <h2 className="text-xl text-gray-900">Retro running</h2>
+      <div className=" px-4 sm:px-6 lg:px-8">
+        <div className=" py-16 sm:py-24 lg:max-w-none lg:py-32">
+          <h2 className="text-xl text-gray-900">Retro running</h2>
 
-            <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
-              {callouts.slice(0, 3).map((callout) => (
-                <div key={callout.name} className="group relative">
-                  <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75">
-                    <img
-                      src={callout.imageSrc}
-                      alt={callout.imageAlt}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </div>
-                  <h3 className="mt-6 text-regular font-medium text-gray-900 flex items-center justify-between">
-                    <span>{callout.name}</span>
-                    <span className="text-black pr-4">
-                      {" "}
-                      {callout.price.toLocaleString()},000₫
-                    </span>
-                  </h3>
-                  <p className="text-gray-500">{callout.description}</p>
+          <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+            {callouts.slice(0, 3).map((callout) => (
+              <div key={callout.name} className="group relative">
+                <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75">
+                  <img
+                    src={callout.imageSrc}
+                    alt={callout.imageAlt}
+                    className="h-full w-full object-cover object-center"
+                  />
                 </div>
-              ))}
-            </div>
+                <h3 className="mt-6 font-medium text-gray-900 flex items-center justify-between">
+                  <span>{callout.name}</span>
+                  <span className="text-black pr-4">
+                    {" "}
+                    {callout.price.toLocaleString()},000₫
+                  </span>
+                </h3>
+                <p className=" text-gray-500">{callout.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+
       {/* Hero section 2 */}
       <div className=" px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
@@ -276,23 +274,22 @@ export default function Home() {
         </Swiper>
       </div>
 
-      <div className="hero-section px-4 sm:px-6 lg:px-8">
+      <div className="hero-section px-4 sm:px-8 md:px-16 lg:px-20">
         <h2 className="text-xl text-gray-900 mt-40">Just in</h2>
         <img
           className="max-w-screen mt-6"
           src="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/w_1824,c_limit/b165c418-4f83-4cd2-82b7-91a9c4251a6c/nike-just-do-it.jpg"
           alt=""
         />
-
         <div
-          className="items-center mx-60 p-2 lg:px-8 text-center mt-4"
+          className="items-center mx-auto sm:mx-10 md:mx-20 p-2 text-center sm:p-4 md:p-8 lg:p-12 mt-4"
           aria-label="Global"
         >
-          <p className="text-7xl font-nike">
+          <p className="text-3xl sm:text-3xl md:text-5xl lg:text-7xl font-nike">
             CHECK THE<br></br> FOOTWORK IN <br></br>THE ZOOM FREAK 5<br></br>{" "}
             &apos;MADE IN SEPOLIA&apos;
           </p>
-          <p className="mt-4">
+          <p className="mt-4 lg:text-2xl">
             Lively street art and global football roots inspire Giannis’ latest
             colourway.
           </p>
@@ -301,36 +298,36 @@ export default function Home() {
           </button>
         </div>
       </div>
-      {/* products */}
-      <div className="">
-        <div className=" px-4 sm:px-6 lg:px-8">
-          <div className=" py-16 sm:py-24 lg:max-w-none lg:py-32">
-            <h2 className="text-xl text-gray-900">Retro running</h2>
 
-            <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
-              {callouts.slice(3, 6).map((callout) => (
-                <div key={callout.name} className="group relative">
-                  <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75">
-                    <img
-                      src={callout.imageSrc}
-                      alt={callout.imageAlt}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </div>
-                  <h3 className="mt-6 font-medium text-gray-900 flex items-center justify-between">
-                    <span>{callout.name}</span>
-                    <span className="text-black pr-4">
-                      {" "}
-                      {callout.price.toLocaleString()},000₫
-                    </span>
-                  </h3>
-                  <p className=" text-gray-500">{callout.description}</p>
+      {/* products */}
+      <div className=" px-4 sm:px-6 lg:px-8">
+        <div className=" py-16 sm:py-24 lg:max-w-none lg:py-32">
+          <h2 className="text-xl text-gray-900">Jordan Sustainable</h2>
+
+          <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+            {callouts.slice(3, 6).map((callout) => (
+              <div key={callout.name} className="group relative">
+                <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75">
+                  <img
+                    src={callout.imageSrc}
+                    alt={callout.imageAlt}
+                    className="h-full w-full object-cover object-center"
+                  />
                 </div>
-              ))}
-            </div>
+                <h3 className="mt-6 font-medium text-gray-900 flex items-center justify-between">
+                  <span>{callout.name}</span>
+                  <span className="text-black pr-4">
+                    {" "}
+                    {callout.price.toLocaleString()},000₫
+                  </span>
+                </h3>
+                <p className=" text-gray-500">{callout.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+
       {/* Nav items */}
       <div aria-labelledby="footer-heading">
         <div className="mx-auto max-w-7xl px-6 pb-8 pt-6 sm:pt-14 lg:px-8 lg:pt-20">
