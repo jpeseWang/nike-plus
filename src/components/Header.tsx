@@ -172,7 +172,7 @@ export default function Header() {
             </a>
           ))}
           <div
-            className="text-sm leading-6 text-gray-900 cursor-pointer"
+            className="text-sm leading-6 text-gray-900 cursor-pointer hover:text-gray-400"
             onClick={() => router.push("/authen/login")}
           >
             Sign in <span aria-hidden="true">&rarr;</span>
@@ -257,7 +257,10 @@ export default function Header() {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 inline mb-1 mx-4"
+            className="w-6 h-6 inline mb-1 mx-4 cursor-pointer"
+            onClick={() => {
+              router.push("/marketplace/cart");
+            }}
           >
             <path
               strokeLinecap="round"
@@ -267,18 +270,6 @@ export default function Header() {
           </svg>
         </div>
       </nav>
-      <header className="bg-gray-100">
-        <div
-          className="items-center mx-40 p-2 lg:px-8 text-center min-w-2"
-          aria-label="Global"
-        >
-          <p className="font-semibold ">New Styles on Sale:</p>
-
-          <p className="text-sm underline ">
-            Up to 40% Off Shop All Our New Markdowns
-          </p>
-        </div>
-      </header>
 
       {/* Mobile view */}
       <Dialog

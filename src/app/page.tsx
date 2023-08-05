@@ -3,6 +3,7 @@
 "use client";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useRouter } from "next/navigation";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
@@ -163,8 +164,21 @@ const slider = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div>
+      <header className="bg-gray-100">
+        <div
+          className="items-center mx-40 p-2 lg:px-8 text-center min-w-2"
+          aria-label="Global"
+        >
+          <p className="font-semibold ">New Styles on Sale:</p>
+
+          <p className="text-sm underline ">
+            Up to 40% Off Shop All Our New Markdowns
+          </p>
+        </div>
+      </header>
       <div className="hero-section px-4 sm:px-8 md:px-16 lg:px-20">
         <img
           className="px-4 sm:px-10 max-w-full"
@@ -185,7 +199,12 @@ export default function Home() {
             <br className="hidden sm:inline" /> the go-to essentials to make
             every movement count.
           </p>
-          <button className="bg-black text-white rounded-2xl px-4 py-1 mt-4 sm:mt-6 md:mt-8">
+          <button
+            className="bg-black text-white rounded-full px-5 py-1.5 mt-4 sm:mt-6 md:mt-8 hover:bg-gray-500 text-lg"
+            onClick={() => {
+              router.push("/marketplace");
+            }}
+          >
             Shop
           </button>
         </div>
@@ -194,26 +213,27 @@ export default function Home() {
       {/* products */}
       <div className=" px-4 sm:px-6 lg:px-8">
         <div className=" py-16 sm:py-24 lg:max-w-none lg:py-32">
-          <h2 className="text-xl text-gray-900">Retro running</h2>
-
-          <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+          <h2 className="text-2xl text-gray-900">Retro running</h2>
+          <div className="mt-6 space-y-12 lg:grid md:grid-cols-2 lg:grid-cols-3 lg:gap-x-12 lg:space-y-0">
             {callouts.slice(0, 3).map((callout) => (
               <div key={callout.name} className="group relative">
-                <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75">
+                <div className="relative h-70 w-auto overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75">
                   <img
                     src={callout.imageSrc}
                     alt={callout.imageAlt}
                     className="h-full w-full object-cover object-center"
                   />
                 </div>
-                <h3 className="mt-6 font-medium text-gray-900 flex items-center justify-between">
+                <h3 className="mt-6 font-medium text-gray-900 flex items-center justify-between lg:text-xl">
                   <span>{callout.name}</span>
                   <span className="text-black pr-4">
                     {" "}
                     {callout.price.toLocaleString()},000₫
                   </span>
                 </h3>
-                <p className=" text-gray-500">{callout.description}</p>
+                <p className=" text-gray-500 text-base">
+                  {callout.description}
+                </p>
               </div>
             ))}
           </div>
@@ -249,6 +269,21 @@ export default function Home() {
           navigation
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }}
+          breakpoints={{
+            390: {
+              slidesPerView: 1,
+            },
+            576: {
+              slidesPerView: 2,
+            },
+            768: {
+              slidesPerView: 3,
+            },
+            1000: {
+              // width: 576,
+              slidesPerView: 4,
+            },
+          }}
         >
           {slider.map((callout) => (
             <SwiperSlide>
@@ -302,26 +337,31 @@ export default function Home() {
       {/* products */}
       <div className=" px-4 sm:px-6 lg:px-8">
         <div className=" py-16 sm:py-24 lg:max-w-none lg:py-32">
-          <h2 className="text-xl text-gray-900">Jordan Sustainable</h2>
+          <h2 className="text-2xl text-gray-900">Jordan Sustainable</h2>
 
           <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
             {callouts.slice(3, 6).map((callout) => (
-              <div key={callout.name} className="group relative">
-                <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75">
-                  <img
-                    src={callout.imageSrc}
-                    alt={callout.imageAlt}
-                    className="h-full w-full object-cover object-center"
-                  />
+              <div key={callout.name} className="group">
+                <div className=" full-80 w-full overflow-hidden rounded-lg bg-white sm:aspect-h-1 sm:aspect-w-2 lg:aspect-h-1 lg:aspect-w-1 group-hover:opacity-75">
+                  <div>
+                    <img
+                      src={callout.imageSrc}
+                      alt={callout.imageAlt}
+                      className="relative h-full w-full object-cover object-center"
+                    />
+                    {/* <button className="absolute bg-red-200 px-4 py-2 z-20 ml-10 mb-440">
+                      Go
+                    </button> */}
+                  </div>
                 </div>
-                <h3 className="mt-6 font-medium text-gray-900 flex items-center justify-between">
+                {/* <h3 className="mt-6 font-medium text-gray-900 flex items-center justify-between">
                   <span>{callout.name}</span>
                   <span className="text-black pr-4">
                     {" "}
                     {callout.price.toLocaleString()},000₫
                   </span>
                 </h3>
-                <p className=" text-gray-500">{callout.description}</p>
+                <p className=" text-gray-500">{callout.description}</p> */}
               </div>
             ))}
           </div>
