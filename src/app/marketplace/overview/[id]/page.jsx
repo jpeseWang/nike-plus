@@ -19,9 +19,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
-const API_HOSTNAME = process.env.API_HOSTNAME || "localhost:3000";
 async function getData(id) {
-  const res = await fetch(`http://${API_HOSTNAME}/api/products${id}`, {
+  const res = await fetch(`http://localhost:3000/api/products/${id}`, {
     cache: "no-store",
   });
 
@@ -406,7 +405,7 @@ export default function ProductOverview({ params }) {
 
                 <div
                   className="space-y-6 text-base text-gray-700"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
+                  dangerouslySetInnerHTML={{ __html: data.description }}
                 />
               </div>
 

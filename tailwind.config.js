@@ -11,6 +11,7 @@ module.exports = {
   theme: {
     fontFamily: {
       nike: ["Anton", "sans-serif"],
+      gothic: ["Gothic A1", "sans-serif"],
     },
     extend: {},
   },

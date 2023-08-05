@@ -130,6 +130,10 @@ export default function Header() {
   const handleMouseLeave = () => {
     setActiveItem(null);
   };
+  const handleSignIn = () => {
+    router.push("/authen/login");
+    setMobileMenuOpen(false);
+  };
 
   return (
     <header className="bg-gray-100">
@@ -167,7 +171,10 @@ export default function Header() {
               <span className="px-2">|</span>
             </a>
           ))}
-          <div className="text-sm leading-6 text-gray-900">
+          <div
+            className="text-sm leading-6 text-gray-900 cursor-pointer"
+            onClick={() => router.push("/authen/login")}
+          >
             Sign in <span aria-hidden="true">&rarr;</span>
           </div>
         </div>
@@ -330,18 +337,15 @@ export default function Header() {
                   stories in sport.{" "}
                   <span className="font-semibold text-black">Learn more</span>
                 </p>
-                <a
-                  href="#"
-                  className="ml-4-mx-3 inline rounded-full px-6 py-2.5 text-base font-semibold leading-7 bg-black text-white hover:opacity-50"
-                >
+                <button className="ml-4-mx-3 inline rounded-full px-6 py-2 text-base font-semibold leading-7 bg-black text-white hover:opacity-50">
                   Join Us
-                </a>
-                <a
-                  href="#"
-                  className="ml-6 -mx-3 rounded-full px-6 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-200 inline border-2"
+                </button>
+                <button
+                  onClick={() => handleSignIn()}
+                  className="ml-6 -mx-3 rounded-full px-6 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-200 inline border-2"
                 >
                   Sign in
-                </a>
+                </button>
               </div>
               <div className="space-y-2 py-6">
                 {navigation.map((item) => (

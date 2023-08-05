@@ -93,7 +93,7 @@ export default function Footer() {
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm font-regular leading-6 text-white font-nike">
+                <h3 className="text-sm font-bold leading-6 text-white font-gothic">
                   FIND A STORE
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
@@ -101,7 +101,7 @@ export default function Footer() {
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm font-semibold font-nike leading-6 text-white hover:text-white"
+                        className="text-sm font-semibold font-gothic leading-6 text-white hover:text-white"
                       >
                         {item.name}
                       </a>
@@ -110,7 +110,7 @@ export default function Footer() {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold font-nike leading-6 text-white">
+                <h3 className="text-sm font-semibold font-gothicgothic leading-6 text-white">
                   GET HELP
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
@@ -129,7 +129,7 @@ export default function Footer() {
             </div>
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm font-nike font-semibold leading-6 text-white">
+                <h3 className="text-sm font-gothic font-semibold leading-6 text-white">
                   ABOUT NIKE
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
