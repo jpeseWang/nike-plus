@@ -24,6 +24,10 @@ const productSchema = new Schema(
       type: String,
       require: true,
     },
+    rating: {
+      type: String,
+      require: true,
+    },
   },
   {
     timestamps: true,

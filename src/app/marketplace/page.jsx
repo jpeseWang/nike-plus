@@ -23,135 +23,7 @@ import {
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import LoadingComponent from "../loading";
-const navigation = {
-  categories: [
-    {
-      id: "women",
-      name: "Women",
-      featured: [
-        {
-          name: "New Arrivals",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
-          imageAlt:
-            "Models sitting back to back, wearing Basic Tee in black and bone.",
-        },
-        {
-          name: "Basic Tees",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
-          imageAlt:
-            "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
-        },
-      ],
-      sections: [
-        {
-          id: "clothing",
-          name: "Clothing",
-          items: [
-            { name: "Tops", href: "#" },
-            { name: "Dresses", href: "#" },
-            { name: "Pants", href: "#" },
-            { name: "Denim", href: "#" },
-            { name: "Sweaters", href: "#" },
-            { name: "T-Shirts", href: "#" },
-            { name: "Jackets", href: "#" },
-            { name: "Activewear", href: "#" },
-            { name: "Browse All", href: "#" },
-          ],
-        },
-        {
-          id: "accessories",
-          name: "Accessories",
-          items: [
-            { name: "Watches", href: "#" },
-            { name: "Wallets", href: "#" },
-            { name: "Bags", href: "#" },
-            { name: "Sunglasses", href: "#" },
-            { name: "Hats", href: "#" },
-            { name: "Belts", href: "#" },
-          ],
-        },
-        {
-          id: "brands",
-          name: "Brands",
-          items: [
-            { name: "Full Nelson", href: "#" },
-            { name: "My Way", href: "#" },
-            { name: "Re-Arranged", href: "#" },
-            { name: "Counterfeit", href: "#" },
-            { name: "Significant Other", href: "#" },
-          ],
-        },
-      ],
-    },
-    {
-      id: "men",
-      name: "Men",
-      featured: [
-        {
-          name: "New Arrivals",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg",
-          imageAlt:
-            "Drawstring top with elastic loop closure and textured interior padding.",
-        },
-        {
-          name: "Artwork Tees",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg",
-          imageAlt:
-            "Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.",
-        },
-      ],
-      sections: [
-        {
-          id: "clothing",
-          name: "Clothing",
-          items: [
-            { name: "Tops", href: "#" },
-            { name: "Pants", href: "#" },
-            { name: "Sweaters", href: "#" },
-            { name: "T-Shirts", href: "#" },
-            { name: "Jackets", href: "#" },
-            { name: "Activewear", href: "#" },
-            { name: "Browse All", href: "#" },
-          ],
-        },
-        {
-          id: "accessories",
-          name: "Accessories",
-          items: [
-            { name: "Watches", href: "#" },
-            { name: "Wallets", href: "#" },
-            { name: "Bags", href: "#" },
-            { name: "Sunglasses", href: "#" },
-            { name: "Hats", href: "#" },
-            { name: "Belts", href: "#" },
-          ],
-        },
-        {
-          id: "brands",
-          name: "Brands",
-          items: [
-            { name: "Re-Arranged", href: "#" },
-            { name: "Counterfeit", href: "#" },
-            { name: "Full Nelson", href: "#" },
-            { name: "My Way", href: "#" },
-          ],
-        },
-      ],
-    },
-  ],
-  pages: [
-    { name: "Company", href: "#" },
-    { name: "Stores", href: "#" },
-  ],
-};
+
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
   { name: "Best Rating", href: "#", current: false },
@@ -203,71 +75,7 @@ const filters = [
     ],
   },
 ];
-const products = [
-  {
-    id: 1,
-    name: "Nike Tech Hera",
-    price: 3239,
-    description: "Men's Shoes",
-    imageSrc:
-      "https://static.nike.com/a/images/q_auto:eco/t_product_v1/f_auto/dpr_1.5/h_590,c_limit/41b3460d-cdd6-4d03-8a0d-d0cf026f6aaa/tech-hera-shoes-8MQgCL.png",
-    imageAlt:
-      "Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.",
-    href: "#",
-  },
-  {
-    id: 2,
-    name: "Nike Cortez",
-    price: 2499,
-    description: "Women's Shoes",
-    imageSrc:
-      "https://static.nike.com/a/images/q_auto:eco/t_product_v1/f_auto/dpr_1.5/h_590,c_limit/7d511351-e68f-4887-8cd0-9c956c45f41f/cortez-shoes-svdKM9.png",
-    imageAlt:
-      "Wood table with porcelain mug, leather journal, brass pen, leather key ring, and a houseplant.",
-    href: "#",
-  },
-  {
-    id: 3,
-    name: "Nike Mornarch",
-    price: 3239,
-    description: "Women's Shoes",
-    imageSrc:
-      "https://static.nike.com/a/images/q_auto:eco/t_product_v1/f_auto/dpr_1.5/h_590,c_limit/dae5b2b3-4234-4d15-8065-8c22605dc1d1/tech-hera-shoes-JlV5km.png",
-    imageAlt: "Collection of four insulated travel bottles on wooden shelf.",
-    href: "#",
-  },
-  {
-    id: 4,
-    name: "Jumpman MVP",
-    price: 4849,
-    description: "Men's Shoes",
-    imageSrc:
-      "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/89bd904a-dfae-4f50-930e-768e016750e0/jumpman-mvp-shoes-JV1HCs.png",
-    imageAlt: "Collection of four insulated travel bottles on wooden shelf.",
-    href: "#",
-  },
-  {
-    id: 5,
-    name: "Air Jordan 1 Mid SE",
-    price: 3669,
-    description: "Men's Shoes",
-    imageSrc:
-      "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/99af6dea-fbad-43d0-983b-ac3197a4ea70/air-jordan-1-mid-shoes-86f1ZW.png",
-    imageAlt: "Collection of four insulated travel bottles on wooden shelf.",
-    href: "#",
-  },
-  {
-    id: 6,
-    name: "Air Jordan XXXVII PF",
-    price: 5129,
-    description: "Women's Shoes",
-    imageSrc:
-      "https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/bd9a8dc3-01d4-41dc-a390-ef12addf1373/air-jordan-xxxvii-low-pf-basketball-shoes-7z7ltC.png",
-    imageAlt: "Collection of four insulated travel bottles on wooden shelf.",
-    href: "#",
-  },
-  // More products...
-];
+
 const footerNavigation = {
   account: [
     { name: "Manage Account", href: "#" },
@@ -620,6 +428,7 @@ export default function Example() {
                         <p className="mt-2 text-medium font-medium text-base text-gray-900">
                           ${product.price}
                         </p>
+                        <button>Add to cart</button>
                       </a>
                     ))}
                   </div>

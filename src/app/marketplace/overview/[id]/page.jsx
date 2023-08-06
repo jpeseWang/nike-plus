@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 import {
   Dialog,
   Disclosure,
@@ -19,6 +19,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
+import { CartContext } from "@/components/CartContext";
+import { useRouter } from "next/navigation";
 async function getData(id) {
   const res = await fetch(`https://nike-plus.vercel.app/api/products/${id}`, {
     cache: "no-store",
@@ -30,202 +32,6 @@ async function getData(id) {
 
   return res.json();
 }
-
-const navigation = {
-  categories: [
-    {
-      id: "women",
-      name: "Women",
-      featured: [
-        {
-          name: "New Arrivals",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
-          imageAlt:
-            "Models sitting back to back, wearing Basic Tee in black and bone.",
-        },
-        {
-          name: "Basic Tees",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
-          imageAlt:
-            "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
-        },
-        {
-          name: "Accessories",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-03.jpg",
-          imageAlt:
-            "Model wearing minimalist watch with black wristband and white watch face.",
-        },
-      ],
-      sections: [
-        [
-          {
-            id: "shoes",
-            name: "Shoes & Accessories",
-            items: [
-              { name: "Sneakers", href: "#" },
-              { name: "Boots", href: "#" },
-              { name: "Flats", href: "#" },
-              { name: "Sandals", href: "#" },
-              { name: "Heels", href: "#" },
-              { name: "Socks", href: "#" },
-            ],
-          },
-          {
-            id: "collection",
-            name: "Shop Collection",
-            items: [
-              { name: "Everything", href: "#" },
-              { name: "Core", href: "#" },
-              { name: "New Arrivals", href: "#" },
-              { name: "Sale", href: "#" },
-              { name: "Accessories", href: "#" },
-            ],
-          },
-        ],
-        [
-          {
-            id: "clothing",
-            name: "All Clothing",
-            items: [
-              { name: "Basic Tees", href: "#" },
-              { name: "Artwork Tees", href: "#" },
-              { name: "Tops", href: "#" },
-              { name: "Bottoms", href: "#" },
-              { name: "Swimwear", href: "#" },
-              { name: "Underwear", href: "#" },
-            ],
-          },
-          {
-            id: "accessories",
-            name: "All Accessories",
-            items: [
-              { name: "Watches", href: "#" },
-              { name: "Wallets", href: "#" },
-              { name: "Bags", href: "#" },
-              { name: "Sunglasses", href: "#" },
-              { name: "Hats", href: "#" },
-              { name: "Belts", href: "#" },
-            ],
-          },
-        ],
-        [
-          {
-            id: "brands",
-            name: "Brands",
-            items: [
-              { name: "Full Nelson", href: "#" },
-              { name: "My Way", href: "#" },
-              { name: "Re-Arranged", href: "#" },
-              { name: "Counterfeit", href: "#" },
-              { name: "Significant Other", href: "#" },
-            ],
-          },
-        ],
-      ],
-    },
-    {
-      id: "men",
-      name: "Men",
-      featured: [
-        {
-          name: "Accessories",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/home-page-03-category-01.jpg",
-          imageAlt:
-            "Wooden shelf with gray and olive drab green baseball caps, next to wooden clothes hanger with sweaters.",
-        },
-        {
-          name: "New Arrivals",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg",
-          imageAlt:
-            "Drawstring top with elastic loop closure and textured interior padding.",
-        },
-        {
-          name: "Artwork Tees",
-          href: "#",
-          imageSrc:
-            "https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg",
-          imageAlt:
-            "Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.",
-        },
-      ],
-      sections: [
-        [
-          {
-            id: "shoes",
-            name: "Shoes & Accessories",
-            items: [
-              { name: "Sneakers", href: "#" },
-              { name: "Boots", href: "#" },
-              { name: "Sandals", href: "#" },
-              { name: "Socks", href: "#" },
-            ],
-          },
-          {
-            id: "collection",
-            name: "Shop Collection",
-            items: [
-              { name: "Everything", href: "#" },
-              { name: "Core", href: "#" },
-              { name: "New Arrivals", href: "#" },
-              { name: "Sale", href: "#" },
-            ],
-          },
-        ],
-        [
-          {
-            id: "clothing",
-            name: "All Clothing",
-            items: [
-              { name: "Basic Tees", href: "#" },
-              { name: "Artwork Tees", href: "#" },
-              { name: "Pants", href: "#" },
-              { name: "Hoodies", href: "#" },
-              { name: "Swimsuits", href: "#" },
-            ],
-          },
-          {
-            id: "accessories",
-            name: "All Accessories",
-            items: [
-              { name: "Watches", href: "#" },
-              { name: "Wallets", href: "#" },
-              { name: "Bags", href: "#" },
-              { name: "Sunglasses", href: "#" },
-              { name: "Hats", href: "#" },
-              { name: "Belts", href: "#" },
-            ],
-          },
-        ],
-        [
-          {
-            id: "brands",
-            name: "Brands",
-            items: [
-              { name: "Re-Arranged", href: "#" },
-              { name: "Counterfeit", href: "#" },
-              { name: "Full Nelson", href: "#" },
-              { name: "My Way", href: "#" },
-            ],
-          },
-        ],
-      ],
-    },
-  ],
-  pages: [
-    { name: "Company", href: "#" },
-    { name: "Stores", href: "#" },
-  ],
-};
 const product = {
   name: "Zip Tote Basket",
   price: "$140",
@@ -307,19 +113,34 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ProductOverview({ params }) {
+export default function ProductOverview({ params }, { productCart }) {
+  const { addProduct } = useContext(CartContext);
   const [data, setData] = useState({});
+  const router = useRouter();
 
   useEffect(() => {
     getData(params.id)
       .then((data) => setData(data))
       .catch((error) => console.error(error));
   }, [params.id]);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+
+  const [selectedColor, setSelectedColor] = useState(product.colors[1]);
+
+  const addFeaturedToCart = () => {
+    addProduct(data._id);
+  };
 
   return (
     <div className="bg-white">
       <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
+        <button
+          class="text-base font-semibold text-gray-500 my-6"
+          onClick={() => {
+            router.push("/marketplace");
+          }}
+        >
+          &larr; Back to Marketplace
+        </button>
         <div className="mx-auto max-w-2xl lg:max-w-none">
           {/* Product */}
           <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
@@ -409,7 +230,7 @@ export default function ProductOverview({ params }) {
                 />
               </div>
 
-              <form className="mt-6">
+              <div className="mt-6">
                 {/* Colors */}
                 <div>
                   <h3 className="text-sm text-gray-600">Color</h3>
@@ -454,7 +275,7 @@ export default function ProductOverview({ params }) {
 
                 <div className="mt-10 flex">
                   <button
-                    type="submit"
+                    onClick={addFeaturedToCart}
                     className="mr-4 flex flex-1 items-center justify-center rounded-full border border-transparent bg-black px-5 py-3 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
                   >
                     Add to bag
@@ -472,7 +293,7 @@ export default function ProductOverview({ params }) {
                     />
                   </button>
                 </div>
-              </form>
+              </div>
 
               <section aria-labelledby="details-heading" className="mt-12">
                 <h2 id="details-heading" className="sr-only">
@@ -569,18 +390,19 @@ export default function ProductOverview({ params }) {
                     </div>
                   </div>
                   <div className="mt-6">
-                    <a
-                      href={product.href}
+                    <button
                       className="relative flex items-center justify-center rounded-md border border-transparent bg-gray-100 px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200"
+                      onClick={addFeaturedToCart}
                     >
                       Add to bag
                       <span className="sr-only">, {product.name}</span>
-                    </a>
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </section>
+          <button onClick={addFeaturedToCart}>ADD</button>
         </div>
       </main>
     </div>
