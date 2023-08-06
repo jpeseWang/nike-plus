@@ -23,6 +23,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/marketplace/page.jsx", "src/app/marketplace/overview/page.jsx", "src/app/marketplace/overview/[id]/page.jsx", "src/app/marketplace/overview/page.jsx", "src/app/marketplace/overview/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/marketplace/page.jsx", "src/app/marketplace/overview/page.jsx", "src/app/marketplace/overview/[id]/page.jsx", "src/app/marketplace/overview/page.jsx", "src/app/marketplace/overview/page.jsx", "src/app/marketplace/cart/page.jsx", "src/app/marketplace/cart/page.jsx", "src/app/marketplace/cart/page.jsx"],
   "exclude": ["node_modules"]
 }
