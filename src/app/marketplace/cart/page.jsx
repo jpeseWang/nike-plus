@@ -8,6 +8,7 @@ import {
   MagnifyingGlassIcon,
   ShoppingBagIcon,
   XMarkIcon as XMarkIconOutline,
+  SpinnerIcon,
 } from "@heroicons/react/24/outline";
 import {
   CheckIcon,
@@ -15,6 +16,8 @@ import {
   QuestionMarkCircleIcon,
   XMarkIcon as XMarkIconMini,
 } from "@heroicons/react/20/solid";
+import LoadingComponent from "@/app/loading";
+import { getData } from "../overview/[id]/page";
 const relatedProducts = [
   {
     id: 1,
@@ -28,47 +31,50 @@ const relatedProducts = [
   },
   // More products...
 ];
-async function getData(id) {
-  const res = await fetch(`http://localhost:3000/api/products/${id}`, {
-    cache: "no-store",
-  });
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
 
 export default function Example() {
-  const router = useRouter();
-  const { cartProducts, removeProduct } = useContext(CartContext);
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const { cartProducts, removeProduct, updateProductQuantity } =
+    useContext(CartContext);
 
   useEffect(() => {
-    // Fetch product information for each product ID in cartProducts
     const fetchProductData = async () => {
-      const productData = await Promise.all(
-        cartProducts.map((productId) => getData(productId))
-      );
-
-      // Consolidate products with the same ID and sum quantities
-      const consolidatedProducts = [];
-      productData.forEach((product) => {
-        const existingProductIndex = consolidatedProducts.findIndex(
-          (p) => p._id === product._id
+      try {
+        const productData = await Promise.all(
+          cartProducts.map((productId) => getData(productId))
         );
-        if (existingProductIndex !== -1) {
-          consolidatedProducts[existingProductIndex].quantity += 1; // Increase quantity
-        } else {
-          product.quantity = 1; // Set initial quantity
-          consolidatedProducts.push(product);
-        }
-      });
+        // Create a map of product IDs to quantities from cartProducts
+        const cartProductQuantities = cartProducts.reduce((acc, productId) => {
+          acc[productId] = (acc[productId] || 0) + 1;
+          return acc;
+        }, {});
 
-      setProducts(consolidatedProducts);
+        // Consolidate products with the same ID and set quantities from cartProductQuantities
+        const consolidatedProducts = [];
+        productData.forEach((product) => {
+          const existingProductIndex = consolidatedProducts.findIndex(
+            (p) => p._id === product._id
+          );
+          if (existingProductIndex !== -1) {
+            consolidatedProducts[existingProductIndex].quantity +=
+              cartProductQuantities[product._id] || 0; // Set quantity from cartProductQuantities
+          } else {
+            product.quantity = cartProductQuantities[product._id] || 0; // Set initial quantity
+            consolidatedProducts.push(product);
+          }
+        });
+
+        setProducts(consolidatedProducts);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
     };
 
-    fetchProductData().catch((error) => console.error(error));
+    fetchProductData();
   }, [cartProducts]);
 
   const totalPrice = products.reduce((total, product) => {
@@ -90,7 +96,9 @@ export default function Example() {
           >
             &larr; Back to Marketplace
           </button>
-          {!products.length && (
+          {isLoading && <LoadingComponent />}
+
+          {!isLoading && !products.length && (
             <div className="mt-6 ">
               <h3 class="mt-2 text-lg font-semibold text-gray-900">
                 {" "}
@@ -113,7 +121,7 @@ export default function Example() {
               </button>
             </div>
           )}
-          <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
+          <div className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
             <section aria-labelledby="cart-heading" className="lg:col-span-7">
               <h2 id="cart-heading" className="sr-only">
                 Items in your shopping cart
@@ -171,11 +179,15 @@ export default function Example() {
                                 id={`quantity-${productIdx}`}
                                 name={`quantity-${productIdx}`}
                                 className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                                defaultValue={product.quantity}
+                                value={product.quantity} // Use value to bind to the state value
                                 onChange={(e) => {
                                   const newQuantity = parseInt(
                                     e.target.value,
                                     10
+                                  );
+                                  updateProductQuantity(
+                                    product.id,
+                                    newQuantity
                                   );
                                   const updatedProducts = products.map((p) =>
                                     p.id === product.id
@@ -307,15 +319,17 @@ export default function Example() {
 
                 <div className="mt-6">
                   <button
-                    type="submit"
                     className="w-full rounded-full border border-transparent bg-black px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                    onClick={() => {
+                      router.push("/order/checkout");
+                    }}
                   >
                     Checkout
                   </button>
                 </div>
               </section>
             )}
-          </form>
+          </div>
 
           {/* Related products */}
           <section aria-labelledby="related-heading" className="mt-24">

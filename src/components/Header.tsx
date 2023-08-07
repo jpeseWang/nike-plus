@@ -130,12 +130,17 @@ export default function Header() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsLgScreen(window.innerWidth >= 1024);
+      if (typeof window !== "undefined") {
+        setIsLgScreen(window.innerWidth >= 1024);
+      }
     };
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+      handleResize();
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, []);
 
   const handleMouseEnter = (index: any) => {

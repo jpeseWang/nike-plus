@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 export const CartContext = createContext({});
 
@@ -19,13 +20,29 @@ export function CartContextProvider({ children }) {
   }, []);
   function addProduct(productId) {
     setCartProducts((prev) => [...prev, productId]);
+    toast.success("Product added successfully!");
   }
   function removeProduct(productId) {
     setCartProducts((prev) => prev.filter((id) => id !== productId));
+    toast.info("Remove product successfully!");
   }
+  function updateProductQuantity(productId, newQuantity) {
+    setCartProducts((prev) =>
+      prev.map((id) =>
+        id === productId ? { id: productId, quantity: newQuantity } : id
+      )
+    );
+  }
+
   return (
     <CartContext.Provider
-      value={{ cartProducts, setCartProducts, addProduct, removeProduct }}
+      value={{
+        cartProducts,
+        setCartProducts,
+        addProduct,
+        removeProduct,
+        updateProductQuantity,
+      }}
     >
       {children}
     </CartContext.Provider>

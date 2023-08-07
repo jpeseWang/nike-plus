@@ -1,35 +1,62 @@
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    href: "#",
-    price: "$36.00",
-    color: "Charcoal",
-    size: "L",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/confirmation-page-06-product-01.jpg",
-    imageAlt: "Model wearing men's charcoal basic tee in large.",
-  },
-  // More products...
-];
+/* eslint-disable react-hooks/rules-of-hooks */
+"use client";
+import { getData } from "@/app/marketplace/overview/[id]/page";
+import { CartContext } from "@/components/CartContext";
+import { useState, useContext, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-export default function Example() {
+export default function OrderSummary(props) {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { cartProducts } = useContext(CartContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchProductData = async () => {
+      try {
+        const productData = await Promise.all(
+          cartProducts.map((productId) => getData(productId))
+        );
+        // Consolidate products with the same ID and sum quantities
+        const consolidatedProducts = [];
+        productData.forEach((product) => {
+          const existingProductIndex = consolidatedProducts.findIndex(
+            (p) => p._id === product._id
+          );
+          if (existingProductIndex !== -1) {
+            consolidatedProducts[existingProductIndex].quantity += 1;
+          } else {
+            product.quantity = 1;
+            consolidatedProducts.push(product);
+          }
+        });
+
+        setProducts(consolidatedProducts);
+        setIsLoading(false); // Set loading to false once data is fetched
+        toast.success("Checkout successfully!");
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false); // Set loading to false if an error occurs
+      }
+    };
+
+    fetchProductData();
+  }, [cartProducts]);
+
+  const subtotal = localStorage.getItem("totalPrice");
+  const final = parseFloat(subtotal);
+  const deliveryFee = localStorage.getItem("deliveryFee");
+  const taxes = subtotal * 0.1;
+
   return (
     <>
-      {/*
-          This example requires updating your template:
-  
-          ```
-          <html class="h-full bg-white">
-          <body class="h-full">
-          ```
-        */}
       <main className="relative lg:min-h-full">
         <div className="h-80 overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
           <img
             src="https://images.unsplash.com/photo-1554350747-ec45fd24f51b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80"
             alt="TODO"
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-center mt-6"
           />
         </div>
 
@@ -67,11 +94,11 @@ export default function Example() {
                       <h3 className="text-gray-900">
                         <a href={product.href}>{product.name}</a>
                       </h3>
-                      <p>{product.color}</p>
-                      <p>{product.size}</p>
+                      <p>{product.type}</p>
+                      <p>x{product.quantity}</p>
                     </div>
                     <p className="flex-none font-medium text-gray-900">
-                      {product.price}
+                      ${product.price}
                     </p>
                   </li>
                 ))}
@@ -80,22 +107,22 @@ export default function Example() {
               <dl className="space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-gray-500">
                 <div className="flex justify-between">
                   <dt>Subtotal</dt>
-                  <dd className="text-gray-900">$72.00</dd>
+                  <dd className="text-gray-900">${subtotal}</dd>
                 </div>
 
                 <div className="flex justify-between">
                   <dt>Shipping</dt>
-                  <dd className="text-gray-900">$8.00</dd>
+                  <dd className="text-gray-900">${deliveryFee}.00</dd>
                 </div>
 
                 <div className="flex justify-between">
                   <dt>Taxes</dt>
-                  <dd className="text-gray-900">$6.40</dd>
+                  <dd className="text-gray-900">${taxes}</dd>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
                   <dt className="text-base">Total</dt>
-                  <dd className="text-base">$86.40</dd>
+                  <dd className="text-base">${final + taxes + deliveryFee}</dd>
                 </div>
               </dl>
 
@@ -142,13 +169,13 @@ export default function Example() {
               </dl>
 
               <div className="mt-16 border-t border-gray-200 py-6 text-right">
-                <a
-                  href="#"
+                <button
                   className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                  onClick={() => router.push("/marketplace")}
                 >
                   Continue Shopping
                   <span aria-hidden="true"> &rarr;</span>
-                </a>
+                </button>
               </div>
             </div>
           </div>
