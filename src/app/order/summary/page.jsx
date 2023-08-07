@@ -45,9 +45,9 @@ export default function OrderSummary(props) {
     fetchProductData();
   }, [cartProducts]);
 
-  const subtotal = ls.getItem("totalPrice");
+  const subtotal = ls ? ls.getItem("totalPrice") : 0;
   const final = parseFloat(subtotal);
-  const deliveryFee = ls.getItem("deliveryFee");
+  const deliveryFee = ls ? ls.getItem("deliveryFee") : 0;
   const taxes = subtotal * 0.1;
 
   return (
