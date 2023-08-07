@@ -29,7 +29,7 @@ const relatedProducts = [
   // More products...
 ];
 async function getData(id) {
-  const res = await fetch(`https://nike-plus.vercel.app/api/products/${id}`, {
+  const res = await fetch(`http://localhost:3000/api/products/${id}`, {
     cache: "no-store",
   });
   if (!res.ok) {

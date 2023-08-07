@@ -22,7 +22,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { CartContext } from "@/components/CartContext";
 import { useRouter } from "next/navigation";
 async function getData(id) {
-  const res = await fetch(`https://nike-plus.vercel.app/api/products/${id}`, {
+  const res = await fetch(`http://localhost:3000//api/products/${id}`, {
     cache: "no-store",
   });
 
