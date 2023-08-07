@@ -7,13 +7,13 @@ import { toast } from "react-toastify";
 import getData from "@/utils/getData";
 
 export default function OrderSummary(props) {
+  const ls = typeof window !== "undefined" ? window.localStorage : null;
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { cartProducts } = useContext(CartContext);
   const router = useRouter();
 
   useEffect(() => {
-    const ls = typeof window !== "undefined" ? window.localStorage : null;
     const fetchProductData = async () => {
       try {
         const productData = await Promise.all(
