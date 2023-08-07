@@ -28,6 +28,7 @@ const paymentMethods = [
 ];
 
 export default function Example() {
+  const ls = typeof window !== "undefined" ? window.localStorage : null;
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
@@ -70,8 +71,8 @@ export default function Example() {
   const totalPrice = calculateTotalPrice(products, selectedDeliveryMethod);
   const handleConfirmOrder = async () => {
     const deliveryFee = selectedDeliveryMethod.price;
-    await localStorage.setItem("totalPrice", totalPrice);
-    await localStorage.setItem("deliveryFee", deliveryFee);
+    await ls.setItem("totalPrice", totalPrice);
+    await ls.setItem("deliveryFee", deliveryFee);
     router.push("/order/summary");
   };
 

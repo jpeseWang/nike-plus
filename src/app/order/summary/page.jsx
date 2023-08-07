@@ -13,6 +13,7 @@ export default function OrderSummary(props) {
   const router = useRouter();
 
   useEffect(() => {
+    const ls = typeof window !== "undefined" ? window.localStorage : null;
     const fetchProductData = async () => {
       try {
         const productData = await Promise.all(
@@ -44,9 +45,9 @@ export default function OrderSummary(props) {
     fetchProductData();
   }, [cartProducts]);
 
-  const subtotal = localStorage.getItem("totalPrice");
+  const subtotal = ls.getItem("totalPrice");
   const final = parseFloat(subtotal);
-  const deliveryFee = localStorage.getItem("deliveryFee");
+  const deliveryFee = ls.getItem("deliveryFee");
   const taxes = subtotal * 0.1;
 
   return (

@@ -122,10 +122,23 @@ const navigation2 = [
 ];
 
 export default function Header() {
+  // const wd = typeof window !== "undefined" ? window : 0;
   const { cartProducts }: any = useContext(CartContext);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const router = useRouter();
+  // const [isLgScreen, setIsLgScreen] = useState(wd.innerWidth >= 1024);
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     setIsLgScreen(wd.innerWidth >= 1024);
+  //   };
+  //   wd.addEventListener("resize", handleResize);
+  //   handleResize();
+  //   return () => {
+  //     wd.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
 
   const handleMouseEnter = (index: any) => {
     setActiveItem(index);
