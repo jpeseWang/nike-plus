@@ -17,7 +17,7 @@ import {
   XMarkIcon as XMarkIconMini,
 } from "@heroicons/react/20/solid";
 import LoadingComponent from "@/app/loading";
-import { getData } from "../overview/[id]/page";
+import getData from "@/utils/getData";
 const relatedProducts = [
   {
     id: 1,
@@ -29,7 +29,6 @@ const relatedProducts = [
     price: "$118",
     color: "Natural",
   },
-  // More products...
 ];
 
 export default function Example() {

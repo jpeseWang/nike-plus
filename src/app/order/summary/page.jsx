@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import { getData } from "@/app/marketplace/overview/[id]/page";
 import { CartContext } from "@/components/CartContext";
 import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import getData from "@/utils/getData";
 
 export default function OrderSummary(props) {
   const [products, setProducts] = useState([]);
