@@ -22,7 +22,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { CartContext } from "@/components/CartContext";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-export async function getData(id) {
+async function getData(id) {
   // TODO: Change this when push to repo
   // https://nike-plus.vercel.app/api/products;
   // `http://localhost:3000//api/products/${id}`
