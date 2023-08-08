@@ -3,8 +3,36 @@ import nike from "@/assets/images/nike.svg.png";
 import Image from "next/image";
 import { CountrySelector } from "@/utils/option";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 const Signup = () => {
   const [inputType, setInputType] = useState("");
+  const [err, setErr] = useState(false);
+  const router = useRouter();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const name = e.target[2].value;
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+      toast.success("Create account successfully!");
+      res.status = 201 && router.push("/auth/login");
+    } catch (err) {
+      setErr(true);
+    }
+  };
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -17,7 +45,7 @@ const Signup = () => {
             Create your Nike Member profile and get first access to the very
             best of Nike products, inspiration and community.
           </p>
-          <form className="space-y-4 items-center" action="#" method="POST">
+          <form className="space-y-4 items-center" onSubmit={handleSubmit}>
             <div className="my-2 w-9/12 mx-auto">
               <input
                 id="email"
@@ -106,10 +134,11 @@ const Signup = () => {
               </button>
             </div>
           </form>
+          {err && "Something went wrong!"}
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already a member?{" "}
-            <a href="/authen/login" className=" leading-6 text-black underline">
+            <a href="/auth/login" className=" leading-6 text-black underline">
               Sign in.
             </a>
           </p>

@@ -37,7 +37,8 @@
     "src/app/marketplace/cart/page.jsx",
     "src/app/marketplace/cart/page.jsx",
     "src/app/order/checkout/page.jsx",
-    "src/app/order/summary/page.jsx"
+    "src/app/order/summary/page.jsx",
+    "src/app/auth/signup/page.jsx"
   ],
   "exclude": ["node_modules"]
 }

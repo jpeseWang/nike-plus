@@ -1,6 +1,17 @@
+"use client";
 import nike from "@/assets/images/nike.svg.png";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { signIn } from "next-auth/react";
 const Login = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+    signIn("credentials", { email, password });
+  };
+  const router = useRouter();
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -12,7 +23,7 @@ const Login = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-4" action="#" method="POST">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <div className="mt-2">
                 <input
@@ -83,9 +94,12 @@ const Login = () => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Not a member?{" "}
-            <a href="#" className=" leading-6 text-black underline">
+            <button
+              onClick={() => router.push("/auth/signup")}
+              className=" leading-6 text-black underline"
+            >
               Join Us
-            </a>
+            </button>
           </p>
         </div>
       </div>

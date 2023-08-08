@@ -147,7 +147,7 @@ export default function Header() {
     setActiveItem(null);
   };
   const handleSignIn = () => {
-    router.push("/authen/login");
+    router.push("/auth/login");
     setMobileMenuOpen(false);
   };
 
@@ -189,7 +189,7 @@ export default function Header() {
           ))}
           <div
             className="text-sm leading-6 text-gray-900 cursor-pointer hover:text-gray-400"
-            onClick={() => router.push("/authen/login")}
+            onClick={() => router.push("/auth/login")}
           >
             Sign in <span aria-hidden="true">&rarr;</span>
           </div>
