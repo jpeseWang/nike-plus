@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import { CartContext } from "@/components/CartContext";
+import { CartContext } from "@/contexts/CartContext";
 import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -10,7 +10,7 @@ export default function OrderSummary(props) {
   const ls = typeof window !== "undefined" ? window.localStorage : null;
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { cartProducts } = useContext(CartContext);
+  const { cartProducts, removeItem } = useContext(CartContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -34,20 +34,20 @@ export default function OrderSummary(props) {
         });
 
         setProducts(consolidatedProducts);
-        setIsLoading(false); // Set loading to false once data is fetched
+        setIsLoading(false);
         toast.success("Checkout successfully!");
       } catch (error) {
         console.error(error);
         setIsLoading(false); // Set loading to false if an error occurs
       }
     };
-
+    localStorage.removeItem("cart");
     fetchProductData();
   }, [cartProducts]);
 
   const subtotal = ls ? ls.getItem("totalPrice") : 0;
   const final = parseFloat(subtotal);
-  const deliveryFee = ls ? ls.getItem("deliveryFee") : 0;
+  const deliveryFee = ls ? parseFloat(ls.getItem("deliveryFee")) : 0;
   const taxes = subtotal * 0.1;
 
   return (

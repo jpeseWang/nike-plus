@@ -9,7 +9,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import { classNames } from "@/utils/classNames";
-import { CartContext } from "@/components/CartContext";
+import { CartContext } from "@/contexts/CartContext";
 import { calculateTotalPrice } from "@/utils/orderPrice";
 import getData from "@/utils/getData";
 const deliveryMethods = [
@@ -73,12 +73,22 @@ export default function Example() {
     const deliveryFee = selectedDeliveryMethod.price;
     await ls.setItem("totalPrice", totalPrice);
     await ls.setItem("deliveryFee", deliveryFee);
+    localStorage.removeItem("cart");
     router.push("/order/summary");
   };
 
   return (
     <div className="bg-gray-50">
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
+        {" "}
+        <button
+          class="text-base font-semibold text-indigo-600 hover:text-indigo-500 pb-6"
+          onClick={() => {
+            router.push("/marketplace/cart");
+          }}
+        >
+          &larr; Back to Cart
+        </button>
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <h1 className="sr-only">Checkout</h1>
 

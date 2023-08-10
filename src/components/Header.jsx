@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useContext, useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
+
 import {
   Bars3Icon,
   MagnifyingGlassIcon,
@@ -14,7 +15,7 @@ import jumpman from "../assets/images/jumpman.svg.png";
 import nike from "../assets/images/nike.svg.png";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CartContext } from "./CartContext";
+import { CartContext } from "@/contexts/CartContext";
 const navigation = [
   {
     name: "Find a Store",
@@ -122,25 +123,24 @@ const navigation2 = [
 ];
 
 export default function Header() {
-  // const wd = typeof window !== "undefined" ? window : 0;
-  const { cartProducts }: any = useContext(CartContext);
+  const { cartProducts } = useContext(CartContext);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const router = useRouter();
-  // const [isLgScreen, setIsLgScreen] = useState(wd.innerWidth >= 1024);
+  const [isLgScreen, setIsLgScreen] = useState(false);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setIsLgScreen(wd.innerWidth >= 1024);
-  //   };
-  //   wd.addEventListener("resize", handleResize);
-  //   handleResize();
-  //   return () => {
-  //     wd.removeEventListener("resize", handleResize);
-  //   };
-  // }, []);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLgScreen(window.innerWidth >= 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-  const handleMouseEnter = (index: any) => {
+  const handleMouseEnter = (index) => {
     setActiveItem(index);
   };
   const handleMouseLeave = () => {
@@ -150,6 +150,9 @@ export default function Header() {
     router.push("/auth/login");
     setMobileMenuOpen(false);
   };
+  const totalQuantity = cartProducts.reduce((total, product) => {
+    return total + product.quantity;
+  }, 0);
 
   return (
     <header className="bg-gray-100">
@@ -160,7 +163,7 @@ export default function Header() {
         <a href="#" className="-m-1.5 p-1.5">
           <span className="sr-only">Your Company</span>
           <Image
-            className="h-6 w-auto"
+            className="h-6 w-auto px-4 sm:px-20"
             src={jumpman}
             alt=""
             onClick={() => router.push("/")}
@@ -203,14 +206,14 @@ export default function Header() {
         <a href="#" className="-m-1.5 p-1.5">
           <span className="sr-only">Your Company</span>
           <Image
-            className="h-6 w-auto"
+            className="h-6 w-auto px-4 sm:px-20 mr-36"
             src={nike}
             alt=""
             onClick={() => router.push("/")}
           />
         </a>
 
-        <div className="hidden lg:flex content-center pl-60">
+        <div className="hidden lg:flex content-center ">
           {navigation2.map((item, index) => (
             <div
               key={item.name}
@@ -243,32 +246,28 @@ export default function Header() {
           ))}
         </div>
         <div className="inline">
-          {/* <MagnifyingGlassIcon
-            className="pointer-events-none absolute inset-y-0 left-40 h-full w-5 text-gray-400"
-            aria-hidden="true"
-          /> */}
-          {/* {isLgScreen ? (
+          {isLgScreen ? (
             <input
               className="relative text-sm leading-6 text-gray-900 bg-gray-100 px-4 py-2 rounded-3xl"
               type="text"
               placeholder="Search..."
             />
-          ) : ( */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6 inline"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-            />
-          </svg>
-          {/* )} */}
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 inline"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          )}
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -303,7 +302,7 @@ export default function Header() {
               />
             </svg>
             <p className="inline mb-1 font-xs -ml-3 lg:font-lg">
-              Cart({cartProducts.length})
+              Cart({totalQuantity})
             </p>
           </div>
         </div>

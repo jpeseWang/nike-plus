@@ -19,7 +19,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
-import { CartContext } from "@/components/CartContext";
+import { CartContext } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import getData from "@/utils/getData";
@@ -118,14 +118,14 @@ export default function ProductOverview({ params }, { productCart }) {
   const [selectedColor, setSelectedColor] = useState(product.colors[1]);
 
   const addFeaturedToCart = () => {
-    addProduct(data._id);
+    addProduct(data._id, data.price);
   };
 
   return (
     <div className="bg-white">
       <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
         <button
-          class="text-base font-semibold text-gray-500 my-6"
+          class="text-base font-semibold text-indigo-600 hover:text-indigo-500 my-6"
           onClick={() => {
             router.push("/marketplace");
           }}
@@ -277,7 +277,7 @@ export default function ProductOverview({ params }, { productCart }) {
                     className="flex flex-1 items-center justify-center rounded-full text-gray-900 hover:bg-gray-100 hover:text-gray-500 border-2 px-5 py-3 text-base font-medium"
                   >
                     {" "}
-                    Favourite
+                    Favourite&nbsp;&nbsp;
                     <HeartIcon
                       className="h-6 w-6 flex-shrink-0"
                       aria-hidden="true"
@@ -393,7 +393,6 @@ export default function ProductOverview({ params }, { productCart }) {
               ))}
             </div>
           </section>
-          <button onClick={addFeaturedToCart}>ADD</button>
         </div>
       </main>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
-import { CartContext } from "@/components/CartContext";
+import { CartContext } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
 import {
   Bars3Icon,
@@ -34,35 +34,26 @@ const relatedProducts = [
 export default function Example() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [localProducts, setLocalProducts] = useState([]);
   const router = useRouter();
-  const { cartProducts, removeProduct, updateProductQuantity } =
+  const { cartProducts, removeProduct, updateProduct, addProduct } =
     useContext(CartContext);
 
   useEffect(() => {
     const fetchProductData = async () => {
       try {
         const productData = await Promise.all(
-          cartProducts.map((productId) => getData(productId))
+          cartProducts.map((productId) => getData(productId.id))
         );
-        // Create a map of product IDs to quantities from cartProducts
-        const cartProductQuantities = cartProducts.reduce((acc, productId) => {
-          acc[productId] = (acc[productId] || 0) + 1;
-          return acc;
-        }, {});
 
-        // Consolidate products with the same ID and set quantities from cartProductQuantities
-        const consolidatedProducts = [];
-        productData.forEach((product) => {
-          const existingProductIndex = consolidatedProducts.findIndex(
-            (p) => p._id === product._id
+        const consolidatedProducts = productData.map((product) => {
+          const localProduct = localProducts.find(
+            (lp) => lp.id === product._id
           );
-          if (existingProductIndex !== -1) {
-            consolidatedProducts[existingProductIndex].quantity +=
-              cartProductQuantities[product._id] || 0; // Set quantity from cartProductQuantities
-          } else {
-            product.quantity = cartProductQuantities[product._id] || 0; // Set initial quantity
-            consolidatedProducts.push(product);
-          }
+          return {
+            ...product,
+            quantity: localProduct.quantity,
+          };
         });
 
         setProducts(consolidatedProducts);
@@ -74,11 +65,20 @@ export default function Example() {
     };
 
     fetchProductData();
-  }, [cartProducts]);
+  }, [cartProducts, localProducts]);
+  useEffect(() => {
+    const lp = JSON.parse(localStorage.getItem("cart"));
+    if (lp) {
+      setLocalProducts(lp);
+    }
+  }, []);
 
-  const totalPrice = products.reduce((total, product) => {
-    return total + product.price * product.quantity;
+  const totalPrice = localProducts.reduce((total, product) => {
+    return total + parseInt(product.price) * product.quantity;
   }, 0);
+  products.map((product) => {
+    console.log(product.quantity);
+  });
 
   return (
     <>
@@ -88,7 +88,7 @@ export default function Example() {
             Shopping Cart
           </h1>
           <button
-            class="text-base font-semibold text-gray-500 mt-6"
+            class="text-base font-semibold text-indigo-600 hover:text-indigo-500 mt-6"
             onClick={() => {
               router.push("/marketplace");
             }}
@@ -147,8 +147,8 @@ export default function Example() {
                               <div className="flex justify-between">
                                 <h3 className="text-sm">
                                   <a
-                                    href={product.href}
-                                    className="font-medium text-lg text-gray-700 hover:text-gray-800"
+                                    href={`/marketplace/overview/${product._id}`}
+                                    className="font-medium text-lg text-gray-700 hover:text-gray-800 cursor-pointer"
                                   >
                                     {product.name}
                                   </a>
@@ -156,6 +156,7 @@ export default function Example() {
                               </div>
                               <div className="mt-1 flex text-medium">
                                 <p className="text-gray-500">{product.type}</p>
+
                                 {product.size ? (
                                   <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
                                     {product.size}
@@ -165,6 +166,7 @@ export default function Example() {
                               <p className="mt-1 text-base font-medium text-gray-900">
                                 ${product.price}
                               </p>
+                              <p>Quantity: {product.quantity}</p>
                             </div>
 
                             <div className="mt-4 sm:mt-0 sm:pr-9">
@@ -178,21 +180,20 @@ export default function Example() {
                                 id={`quantity-${productIdx}`}
                                 name={`quantity-${productIdx}`}
                                 className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                                value={product.quantity} // Use value to bind to the state value
+                                value={product.quantity}
                                 onChange={(e) => {
                                   const newQuantity = parseInt(
                                     e.target.value,
                                     10
                                   );
-                                  updateProductQuantity(
-                                    product.id,
-                                    newQuantity
-                                  );
+                                  updateProduct(product._id, newQuantity);
                                   const updatedProducts = products.map((p) =>
                                     p.id === product.id
                                       ? { ...p, quantity: newQuantity }
                                       : p
                                   );
+
+                                  setLocalProducts(updatedProducts);
                                   setProducts(updatedProducts);
                                 }}
                               >
@@ -304,14 +305,16 @@ export default function Example() {
                         />
                       </a>
                     </dt>
-                    <dd className="text-sm font-medium text-gray-900">$8.32</dd>
+                    <dd className="text-sm font-medium text-gray-900">
+                      ${(totalPrice * 0.1).toFixed(2)}
+                    </dd>
                   </div>
                   <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                     <dt className="text-base font-medium text-gray-900">
                       Order total
                     </dt>
                     <dd className="text-base font-medium text-gray-900">
-                      ${totalPrice}
+                      ${(totalPrice + totalPrice * 0.1 + 5).toFixed(2)}
                     </dd>
                   </div>
                 </dl>
