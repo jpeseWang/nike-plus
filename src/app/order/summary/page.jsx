@@ -15,7 +15,8 @@ export default function OrderSummary(props) {
   const [localProducts, setLocalProducts] = useState([]);
 
   useEffect(() => {
-    const lp = JSON.parse(localStorage.getItem("cart"));
+    const lp = JSON.parse(ls?.getItem("cart") || "0");
+
     if (lp) {
       setLocalProducts(lp);
     }

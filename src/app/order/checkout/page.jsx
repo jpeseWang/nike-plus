@@ -29,7 +29,7 @@ const paymentMethods = [
 
 export default function Example() {
   const ls = typeof window !== "undefined" ? window.localStorage : null;
-  const totalPrice = parseInt(ls.getItem("totalPrice"));
+  const totalPrice = parseInt(ls?.getItem("totalPrice") || "0");
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
