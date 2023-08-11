@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useContext, useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
-
+import { useSession } from "next-auth/react";
 import {
   Bars3Icon,
   MagnifyingGlassIcon,
@@ -16,6 +16,7 @@ import nike from "../assets/images/nike.svg.png";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CartContext } from "@/contexts/CartContext";
+import { signOut } from "next-auth/react";
 const navigation = [
   {
     name: "Find a Store",
@@ -23,7 +24,7 @@ const navigation = [
     icon: ShoppingCartIcon,
   },
   { name: "Help", href: "#", icon: QuestionMarkCircleIcon },
-  { name: "Join Us", href: "#", icon: ArrowRightOnRectangleIcon },
+  { name: "Join Us", href: "/auth/cta", icon: ArrowRightOnRectangleIcon },
 ];
 const navigation2 = [
   {
@@ -128,6 +129,7 @@ export default function Header() {
   const [activeItem, setActiveItem] = useState(null);
   const router = useRouter();
   const [isLgScreen, setIsLgScreen] = useState(false);
+  const session = useSession();
 
   useEffect(() => {
     const handleResize = () => {
@@ -190,12 +192,22 @@ export default function Header() {
               <span className="px-2">|</span>
             </a>
           ))}
-          <div
-            className="text-sm leading-6 text-gray-900 cursor-pointer hover:text-gray-400"
-            onClick={() => router.push("/auth/login")}
-          >
-            Sign in <span aria-hidden="true">&rarr;</span>
-          </div>
+
+          {session.status === "authenticated" ? (
+            <div
+              className="text-sm leading-6 text-gray-900 cursor-pointer hover:text-gray-400 font-semibold"
+              onClick={signOut}
+            >
+              Logout
+            </div>
+          ) : (
+            <div
+              className="text-sm leading-6 text-gray-900 cursor-pointer hover:text-gray-400"
+              onClick={() => router.push("/auth/login")}
+            >
+              Sign in <span aria-hidden="true">&rarr;</span>
+            </div>
+          )}
         </div>
       </nav>
       {/* Header 2 */}
@@ -275,7 +287,8 @@ export default function Header() {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 inline mb-1 mx-2 ml-6"
+            className="w-6 h-6 inline mb-1 mx-2 ml-6 cursor-pointer"
+            onClick={() => router.push("/auth/dashboard")}
           >
             <path
               strokeLinecap="round"

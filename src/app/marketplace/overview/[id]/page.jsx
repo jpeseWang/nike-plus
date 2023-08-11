@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Dialog,
   Disclosure,
@@ -9,7 +9,6 @@ import {
   Transition,
 } from "@headlessui/react";
 import {
-  Bars3Icon,
   HeartIcon,
   MagnifyingGlassIcon,
   MinusIcon,
@@ -21,38 +20,13 @@ import {
 import { StarIcon } from "@heroicons/react/20/solid";
 import { CartContext } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import getData from "@/utils/getData";
+import LoadingComponent from "@/app/loading";
 const product = {
   name: "Zip Tote Basket",
   price: "$140",
   rating: 4,
-  images: [
-    {
-      id: 1,
-      name: "Angled view",
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-03-product-01.jpg",
-      alt: "Angled front view with bag zipped and handles upright.",
-    },
-    {
-      id: 2,
-      name: "Angled view",
-      src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/9f85fb21-0ffa-4bb7-8a43-d36be654c99b/dunk-low-retro-shoes-GcxjPd.png",
-      alt: "Angled front view with bag zipped and handles upright.",
-    },
-    {
-      id: 3,
-      name: "Angled view",
-      src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/c0da642f-ee23-4364-8e14-d74a1f2ebf71/dunk-low-retro-shoes-GcxjPd.png",
-      alt: "Angled front view with bag zipped and handles upright.",
-    },
-    {
-      id: 4,
-      name: "Angled view",
-      src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/7c84283e-c940-44ae-91a4-d384169bd617/dunk-low-retro-shoes-GcxjPd.png",
-      alt: "Angled front view with bag zipped and handles upright.",
-    },
-  ],
+
   colors: [
     {
       name: "Washed Black",
@@ -104,8 +78,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ProductOverview({ params }, { productCart }) {
+export default function ProductOverview({ params }) {
   const { addProduct } = useContext(CartContext);
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
   const router = useRouter();
 
@@ -113,6 +88,7 @@ export default function ProductOverview({ params }, { productCart }) {
     getData(params.id)
       .then((data) => setData(data))
       .catch((error) => console.error(error));
+    setIsLoading(false);
   }, [params.id]);
 
   const [selectedColor, setSelectedColor] = useState(product.colors[1]);
@@ -132,213 +108,220 @@ export default function ProductOverview({ params }, { productCart }) {
         >
           &larr; Back to Marketplace
         </button>
+        {isLoading && <LoadingComponent />}
+
         <div className="mx-auto max-w-2xl lg:max-w-none">
-          {/* Product */}
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
-            {/* Image gallery */}
-            <Tab.Group as="div" className="flex flex-col-reverse">
-              {/* Image selector */}
-              <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-                <Tab.List className="grid grid-cols-4 gap-6">
-                  <Tab
-                    key={data._id}
-                    className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
-                  >
-                    {({ selected }) => (
-                      <>
-                        <span className="sr-only">{data._id}</span>
-                        <span className="absolute inset-0 overflow-hidden rounded-md">
-                          <img
-                            src={data.imageSrc}
-                            alt=""
-                            className="h-full w-full object-cover object-center"
+          {!isLoading && (
+            <>
+              <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+                <Tab.Group as="div" className="flex flex-col-reverse">
+                  <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
+                    <Tab.List className="grid grid-cols-4 gap-6">
+                      <Tab
+                        key={data._id}
+                        className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
+                      >
+                        {({ selected }) => (
+                          <>
+                            <span className="sr-only">{data._id}</span>
+                            <span className="absolute inset-0 overflow-hidden rounded-md">
+                              <img
+                                src={data.imageSrc}
+                                alt=""
+                                className="h-full w-full object-cover object-center"
+                              />
+                            </span>
+                            <span
+                              className={classNames(
+                                selected
+                                  ? "ring-indigo-500"
+                                  : "ring-transparent",
+                                "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2"
+                              )}
+                              aria-hidden="true"
+                            />
+                          </>
+                        )}
+                      </Tab>
+                    </Tab.List>
+                  </div>
+
+                  <Tab.Panels className="aspect-h-1 aspect-w-1 w-full">
+                    <Tab.Panel key={data._id}>
+                      <img
+                        src={data.imageSrc}
+                        className="h-full w-full object-cover object-center sm:rounded-lg"
+                      />
+                    </Tab.Panel>
+                  </Tab.Panels>
+                </Tab.Group>
+
+                {/* Product info */}
+                <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+                  <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
+                    {data.name}
+                  </h1>
+
+                  <div className="mt-3">
+                    <h2 className="sr-only">Product information</h2>
+                    <p className="text-2xl tracking-tight text-gray-900">
+                      ${data.price}
+                    </p>
+                  </div>
+
+                  {/* Reviews */}
+                  <div className="mt-3">
+                    <h3 className="sr-only">Reviews</h3>
+                    <div className="flex items-center">
+                      <div className="flex items-center">
+                        {[0, 1, 2, 3, 4].map((rating) => (
+                          <StarIcon
+                            key={rating}
+                            className={classNames(
+                              product.rating > rating
+                                ? "text-black"
+                                : "text-gray-300",
+                              "h-5 w-5 flex-shrink-0"
+                            )}
+                            aria-hidden="true"
                           />
-                        </span>
-                        <span
-                          className={classNames(
-                            selected ? "ring-indigo-500" : "ring-transparent",
-                            "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2"
-                          )}
+                        ))}
+                      </div>
+                      <p className="sr-only">{product.rating} out of 5 stars</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <h3 className="sr-only">Description</h3>
+
+                    <div
+                      className="space-y-6 text-base text-gray-700"
+                      dangerouslySetInnerHTML={{ __html: data.description }}
+                    />
+                  </div>
+
+                  <div className="mt-6">
+                    {/* Colors */}
+                    <div>
+                      <h3 className="text-sm text-gray-600">Color</h3>
+
+                      <RadioGroup
+                        value={selectedColor}
+                        onChange={setSelectedColor}
+                        className="mt-2"
+                      >
+                        <RadioGroup.Label className="sr-only">
+                          Choose a color
+                        </RadioGroup.Label>
+                        <div className="flex items-center space-x-3">
+                          {product.colors.map((color) => (
+                            <RadioGroup.Option
+                              key={color.name}
+                              value={color}
+                              className={({ active, checked }) =>
+                                classNames(
+                                  color.selectedColor,
+                                  active && checked ? "ring ring-offset-1" : "",
+                                  !active && checked ? "ring-2" : "",
+                                  "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none"
+                                )
+                              }
+                            >
+                              <RadioGroup.Label as="span" className="sr-only">
+                                {color.name}
+                              </RadioGroup.Label>
+                              <span
+                                aria-hidden="true"
+                                className={classNames(
+                                  color.bgColor,
+                                  "h-8 w-8 rounded-full border border-black border-opacity-10"
+                                )}
+                              />
+                            </RadioGroup.Option>
+                          ))}
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    <div className="mt-10 flex">
+                      <button
+                        onClick={addFeaturedToCart}
+                        className="mr-4 flex flex-1 items-center justify-center rounded-full border border-transparent bg-black px-5 py-3 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
+                      >
+                        Add to bag
+                      </button>
+
+                      <button
+                        type="button"
+                        className="flex flex-1 items-center justify-center rounded-full text-gray-900 hover:bg-gray-100 hover:text-gray-500 border-2 px-5 py-3 text-base font-medium"
+                      >
+                        {" "}
+                        Favourite&nbsp;&nbsp;
+                        <HeartIcon
+                          className="h-6 w-6 flex-shrink-0"
                           aria-hidden="true"
                         />
-                      </>
-                    )}
-                  </Tab>
-                </Tab.List>
-              </div>
-
-              <Tab.Panels className="aspect-h-1 aspect-w-1 w-full">
-                <Tab.Panel key={data._id}>
-                  <img
-                    src={data.imageSrc}
-                    className="h-full w-full object-cover object-center sm:rounded-lg"
-                  />
-                </Tab.Panel>
-              </Tab.Panels>
-            </Tab.Group>
-
-            {/* Product info */}
-            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-              <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-                {data.name}
-              </h1>
-
-              <div className="mt-3">
-                <h2 className="sr-only">Product information</h2>
-                <p className="text-2xl tracking-tight text-gray-900">
-                  ${data.price}
-                </p>
-              </div>
-
-              {/* Reviews */}
-              <div className="mt-3">
-                <h3 className="sr-only">Reviews</h3>
-                <div className="flex items-center">
-                  <div className="flex items-center">
-                    {[0, 1, 2, 3, 4].map((rating) => (
-                      <StarIcon
-                        key={rating}
-                        className={classNames(
-                          product.rating > rating
-                            ? "text-black"
-                            : "text-gray-300",
-                          "h-5 w-5 flex-shrink-0"
-                        )}
-                        aria-hidden="true"
-                      />
-                    ))}
+                      </button>
+                    </div>
                   </div>
-                  <p className="sr-only">{product.rating} out of 5 stars</p>
-                </div>
-              </div>
 
-              <div className="mt-6">
-                <h3 className="sr-only">Description</h3>
+                  <section aria-labelledby="details-heading" className="mt-12">
+                    <h2 id="details-heading" className="sr-only">
+                      Additional details
+                    </h2>
 
-                <div
-                  className="space-y-6 text-base text-gray-700"
-                  dangerouslySetInnerHTML={{ __html: data.description }}
-                />
-              </div>
-
-              <div className="mt-6">
-                {/* Colors */}
-                <div>
-                  <h3 className="text-sm text-gray-600">Color</h3>
-
-                  <RadioGroup
-                    value={selectedColor}
-                    onChange={setSelectedColor}
-                    className="mt-2"
-                  >
-                    <RadioGroup.Label className="sr-only">
-                      Choose a color
-                    </RadioGroup.Label>
-                    <div className="flex items-center space-x-3">
-                      {product.colors.map((color) => (
-                        <RadioGroup.Option
-                          key={color.name}
-                          value={color}
-                          className={({ active, checked }) =>
-                            classNames(
-                              color.selectedColor,
-                              active && checked ? "ring ring-offset-1" : "",
-                              !active && checked ? "ring-2" : "",
-                              "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none"
-                            )
-                          }
-                        >
-                          <RadioGroup.Label as="span" className="sr-only">
-                            {color.name}
-                          </RadioGroup.Label>
-                          <span
-                            aria-hidden="true"
-                            className={classNames(
-                              color.bgColor,
-                              "h-8 w-8 rounded-full border border-black border-opacity-10"
-                            )}
-                          />
-                        </RadioGroup.Option>
+                    <div className="divide-y divide-gray-200 border-t">
+                      {product.details.map((detail) => (
+                        <Disclosure as="div" key={detail.name}>
+                          {({ open }) => (
+                            <>
+                              <h3>
+                                <Disclosure.Button className="group relative flex w-full items-center justify-between py-6 text-left">
+                                  <span
+                                    className={classNames(
+                                      open
+                                        ? "text-indigo-600"
+                                        : "text-gray-900",
+                                      "text-sm font-medium"
+                                    )}
+                                  >
+                                    {detail.name}
+                                  </span>
+                                  <span className="ml-6 flex items-center">
+                                    {open ? (
+                                      <MinusIcon
+                                        className="block h-6 w-6 text-indigo-400 group-hover:text-indigo-500"
+                                        aria-hidden="true"
+                                      />
+                                    ) : (
+                                      <PlusIcon
+                                        className="block h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                                        aria-hidden="true"
+                                      />
+                                    )}
+                                  </span>
+                                </Disclosure.Button>
+                              </h3>
+                              <Disclosure.Panel
+                                as="div"
+                                className="prose prose-sm pb-6"
+                              >
+                                <ul role="list">
+                                  {detail.items.map((item) => (
+                                    <li key={item}>{item}</li>
+                                  ))}
+                                </ul>
+                              </Disclosure.Panel>
+                            </>
+                          )}
+                        </Disclosure>
                       ))}
                     </div>
-                  </RadioGroup>
-                </div>
-
-                <div className="mt-10 flex">
-                  <button
-                    onClick={addFeaturedToCart}
-                    className="mr-4 flex flex-1 items-center justify-center rounded-full border border-transparent bg-black px-5 py-3 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
-                  >
-                    Add to bag
-                  </button>
-
-                  <button
-                    type="button"
-                    className="flex flex-1 items-center justify-center rounded-full text-gray-900 hover:bg-gray-100 hover:text-gray-500 border-2 px-5 py-3 text-base font-medium"
-                  >
-                    {" "}
-                    Favourite&nbsp;&nbsp;
-                    <HeartIcon
-                      className="h-6 w-6 flex-shrink-0"
-                      aria-hidden="true"
-                    />
-                  </button>
+                  </section>
                 </div>
               </div>
-
-              <section aria-labelledby="details-heading" className="mt-12">
-                <h2 id="details-heading" className="sr-only">
-                  Additional details
-                </h2>
-
-                <div className="divide-y divide-gray-200 border-t">
-                  {product.details.map((detail) => (
-                    <Disclosure as="div" key={detail.name}>
-                      {({ open }) => (
-                        <>
-                          <h3>
-                            <Disclosure.Button className="group relative flex w-full items-center justify-between py-6 text-left">
-                              <span
-                                className={classNames(
-                                  open ? "text-indigo-600" : "text-gray-900",
-                                  "text-sm font-medium"
-                                )}
-                              >
-                                {detail.name}
-                              </span>
-                              <span className="ml-6 flex items-center">
-                                {open ? (
-                                  <MinusIcon
-                                    className="block h-6 w-6 text-indigo-400 group-hover:text-indigo-500"
-                                    aria-hidden="true"
-                                  />
-                                ) : (
-                                  <PlusIcon
-                                    className="block h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                                    aria-hidden="true"
-                                  />
-                                )}
-                              </span>
-                            </Disclosure.Button>
-                          </h3>
-                          <Disclosure.Panel
-                            as="div"
-                            className="prose prose-sm pb-6"
-                          >
-                            <ul role="list">
-                              {detail.items.map((item) => (
-                                <li key={item}>{item}</li>
-                              ))}
-                            </ul>
-                          </Disclosure.Panel>
-                        </>
-                      )}
-                    </Disclosure>
-                  ))}
-                </div>
-              </section>
-            </div>
-          </div>
+            </>
+          )}
 
           <section
             aria-labelledby="related-heading"

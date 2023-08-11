@@ -34,7 +34,7 @@ export default function Example() {
     deliveryMethods[0]
   );
 
-  const { cartProducts } = useContext(CartContext);
+  const { cartProducts, removeProduct } = useContext(CartContext);
 
   const [products, setProducts] = useState([]);
   const [localProducts, setLocalProducts] = useState([]);
@@ -540,6 +540,7 @@ export default function Example() {
                               <TrashIcon
                                 className="h-5 w-5"
                                 aria-hidden="true"
+                                onClick={() => removeProduct(product._id)}
                               />
                             </button>
                           </div>

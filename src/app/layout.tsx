@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import { CartContextProvider } from "@/contexts/CartContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AuthProvider from "@/contexts/AuthProvider";
+import { SessionProvider } from "next-auth/react";
 require("dotenv").config();
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,14 +24,16 @@ export default function RootLayout({
     <CartContextProvider>
       <html lang="en">
         <body>
-          <header>
-            <Header />
-          </header>
-          {children}
-          <ToastContainer />
-          <footer>
-            <Footer />
-          </footer>
+          <AuthProvider>
+            <header>
+              <Header />
+            </header>
+            {children}
+            <ToastContainer />
+            <footer>
+              <Footer />
+            </footer>
+          </AuthProvider>
         </body>
       </html>
     </CartContextProvider>

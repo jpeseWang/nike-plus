@@ -2,16 +2,24 @@
 import nike from "@/assets/images/nike.svg.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import LoadingComponent from "@/app/loading";
 const Login = () => {
+  const router = useRouter();
+  const session = useSession();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
     signIn("credentials", { email, password });
   };
-  const router = useRouter();
+
+  if (session.status === "loading") {
+    return <LoadingComponent />;
+  }
+  if (session.status === "authenticated") {
+    router?.push("/auth/dashboard");
+  }
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

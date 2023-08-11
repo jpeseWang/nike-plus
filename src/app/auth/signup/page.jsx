@@ -5,7 +5,24 @@ import { CountrySelector } from "@/utils/option";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { RadioGroup } from "@headlessui/react";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { classNames } from "@/utils/classNames";
+const mailingLists = [
+  {
+    id: 1,
+    title: "Male",
+  },
+  {
+    id: 2,
+    title: "Female",
+  },
+];
+
 const Signup = () => {
+  const [selectedMailingLists, setSelectedMailingLists] = useState(
+    mailingLists[0]
+  );
   const [inputType, setInputType] = useState("");
   const [err, setErr] = useState(false);
   const router = useRouter();
@@ -82,7 +99,7 @@ const Signup = () => {
               <input
                 type={inputType}
                 onFocus={() => setInputType("date")}
-                onBlur={() => setInputType("text")} // Change back to text on blur
+                onBlur={() => setInputType("text")}
                 autoComplete="current-password"
                 placeholder="Date of Birth"
                 required
@@ -92,13 +109,60 @@ const Signup = () => {
                 Get a Nike Member Reward every year on your Birthday.
               </p>
               <CountrySelector />
-              <input
-                type="text"
-                autoComplete="current-password"
-                placeholder="Password"
-                required
-                className="block w-full rounded border-0 py-1.5 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 my-4"
-              />
+              <div className="mb-4">
+                <RadioGroup
+                  value={selectedMailingLists}
+                  onChange={setSelectedMailingLists}
+                >
+                  <div className="w-full grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                    {mailingLists.map((mailingList) => (
+                      <RadioGroup.Option
+                        key={mailingList.id}
+                        value={mailingList}
+                        className={({ active }) =>
+                          classNames(
+                            active
+                              ? "border-gray-600 ring-1 ring-gray-600"
+                              : "border-gray-300",
+                            "relative flex cursor-pointer rounded border bg-white py-1.5 px-4 shadow-sm focus:outline-none"
+                          )
+                        }
+                      >
+                        {({ checked, active }) => (
+                          <>
+                            <span className="flex flex-1"></span>
+                            <CheckCircleIcon
+                              className={classNames(
+                                !checked ? "invisible" : "",
+                                "h-5 w-5 text-gray-600"
+                              )}
+                              aria-hidden="true"
+                            />
+                            <span className="flex">
+                              <RadioGroup.Label
+                                as="span"
+                                className="block text-sm font-medium text-gray-800 pr-6"
+                              >
+                                {mailingList.title}
+                              </RadioGroup.Label>
+                            </span>
+                            <span
+                              className={classNames(
+                                active ? "border" : "border-1",
+                                checked
+                                  ? "border-gray-600"
+                                  : "border-transparent",
+                                "pointer-events-none absolute -inset-px rounded"
+                              )}
+                              aria-hidden="true"
+                            />
+                          </>
+                        )}
+                      </RadioGroup.Option>
+                    ))}
+                  </div>
+                </RadioGroup>
+              </div>
               <div className="flex items-center">
                 <input
                   id="remember-me"
