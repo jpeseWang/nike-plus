@@ -29,51 +29,55 @@ const paymentMethods = [
 
 export default function Example() {
   const ls = typeof window !== "undefined" ? window.localStorage : null;
+  const totalPrice = parseInt(ls.getItem("totalPrice"));
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
+
   const { cartProducts } = useContext(CartContext);
 
+  const [products, setProducts] = useState([]);
+  const [localProducts, setLocalProducts] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    const lp = JSON.parse(localStorage.getItem("cart"));
+    if (lp) {
+      setLocalProducts(lp);
+    }
+  }, []);
   useEffect(() => {
     const fetchProductData = async () => {
       try {
         const productData = await Promise.all(
-          cartProducts.map((productId) => getData(productId))
+          cartProducts.map((productId) => getData(productId.id))
         );
-        // Consolidate products with the same ID and sum quantities
-        const consolidatedProducts = [];
-        productData.forEach((product) => {
-          const existingProductIndex = consolidatedProducts.findIndex(
-            (p) => p._id === product._id
+
+        const updatedProducts = productData.map((product) => {
+          const localProduct = localProducts.find(
+            (lp) => lp.id === product._id
           );
-          if (existingProductIndex !== -1) {
-            consolidatedProducts[existingProductIndex].quantity += 1; // Increase quantity
-          } else {
-            product.quantity = 1; // Set initial quantity
-            consolidatedProducts.push(product);
-          }
+          return {
+            ...product,
+            quantity: localProduct.quantity,
+          };
         });
 
-        setProducts(consolidatedProducts);
-        setIsLoading(false); // Set loading to false once data is fetched
+        setProducts(updatedProducts);
       } catch (error) {
         console.error(error);
-        setIsLoading(false); // Set loading to false if an error occurs
       }
     };
 
     fetchProductData();
-  }, [cartProducts]);
+  }, [cartProducts, localProducts]);
 
-  const totalPrice = calculateTotalPrice(products, selectedDeliveryMethod);
+  // const totalPrice = calculateTotalPrice(products, selectedDeliveryMethod);
   const handleConfirmOrder = async () => {
     const deliveryFee = selectedDeliveryMethod.price;
     await ls.setItem("totalPrice", totalPrice);
     await ls.setItem("deliveryFee", deliveryFee);
-    localStorage.removeItem("cart");
+
     router.push("/order/summary");
   };
 

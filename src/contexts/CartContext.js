@@ -34,7 +34,6 @@ export function CartContextProvider({ children }) {
       ]);
       toast.success("Product added successfully!");
     } else {
-      toast.success("Product already");
       setCartProducts(updatedCart);
     }
   }
@@ -51,30 +50,8 @@ export function CartContextProvider({ children }) {
     const updatedCart = cartProducts.map((product) =>
       product.id === productId ? { ...product, quantity: newQuantity } : product
     );
-    console.log("lc", cartProducts.id);
-    console.log("pro", productId);
-    setCartProducts(updatedCart);
-  }
 
-  function editproduct(productId, newQuantity) {
-    const updatedCart = cartProducts.map((product) =>
-      product.id === productId
-        ? { ...product, price: productPrice, quantity: newQuantity }
-        : product
-    );
-    const productAlreadyInCart = updatedCart.some(
-      (product) => product.id === productId
-    );
-    if (!productAlreadyInCart) {
-      setCartProducts((prev) => [
-        ...prev,
-        { id: productId, price: productPrice, quantity: 1 },
-      ]);
-      toast.success("Product added successfully!");
-    } else {
-      toast.success("Product already");
-      setCartProducts(updatedCart);
-    }
+    setCartProducts(updatedCart);
   }
 
   return (

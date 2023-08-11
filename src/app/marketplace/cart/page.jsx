@@ -36,9 +36,15 @@ export default function Example() {
   const [isLoading, setIsLoading] = useState(true);
   const [localProducts, setLocalProducts] = useState([]);
   const router = useRouter();
-  const { cartProducts, removeProduct, updateProduct, addProduct } =
+  const ls = typeof window !== "undefined" ? window.localStorage : null;
+  const { cartProducts, removeProduct, updateProduct } =
     useContext(CartContext);
-
+  useEffect(() => {
+    const lp = JSON.parse(localStorage.getItem("cart"));
+    if (lp) {
+      setLocalProducts(lp);
+    }
+  }, []);
   useEffect(() => {
     const fetchProductData = async () => {
       try {
@@ -46,7 +52,7 @@ export default function Example() {
           cartProducts.map((productId) => getData(productId.id))
         );
 
-        const consolidatedProducts = productData.map((product) => {
+        const updatedProducts = productData.map((product) => {
           const localProduct = localProducts.find(
             (lp) => lp.id === product._id
           );
@@ -56,7 +62,7 @@ export default function Example() {
           };
         });
 
-        setProducts(consolidatedProducts);
+        setProducts(updatedProducts);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -66,19 +72,10 @@ export default function Example() {
 
     fetchProductData();
   }, [cartProducts, localProducts]);
-  useEffect(() => {
-    const lp = JSON.parse(localStorage.getItem("cart"));
-    if (lp) {
-      setLocalProducts(lp);
-    }
-  }, []);
 
   const totalPrice = localProducts.reduce((total, product) => {
     return total + parseInt(product.price) * product.quantity;
   }, 0);
-  products.map((product) => {
-    console.log(product.quantity);
-  });
 
   return (
     <>
@@ -195,6 +192,7 @@ export default function Example() {
 
                                   setLocalProducts(updatedProducts);
                                   setProducts(updatedProducts);
+                                  window.location.reload();
                                 }}
                               >
                                 <option value={1}>1</option>
@@ -323,6 +321,7 @@ export default function Example() {
                   <button
                     className="w-full rounded-full border border-transparent bg-black px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                     onClick={() => {
+                      ls.setItem("totalPrice", totalPrice);
                       router.push("/order/checkout");
                     }}
                   >

@@ -9,46 +9,49 @@ import getData from "@/utils/getData";
 export default function OrderSummary(props) {
   const ls = typeof window !== "undefined" ? window.localStorage : null;
   const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { cartProducts, removeItem } = useContext(CartContext);
+  const { cartProducts } = useContext(CartContext);
   const router = useRouter();
 
+  const [localProducts, setLocalProducts] = useState([]);
+
+  useEffect(() => {
+    const lp = JSON.parse(localStorage.getItem("cart"));
+    if (lp) {
+      setLocalProducts(lp);
+    }
+  }, []);
   useEffect(() => {
     const fetchProductData = async () => {
       try {
         const productData = await Promise.all(
-          cartProducts.map((productId) => getData(productId))
+          cartProducts.map((productId) => getData(productId.id))
         );
-        // Consolidate products with the same ID and sum quantities
-        const consolidatedProducts = [];
-        productData.forEach((product) => {
-          const existingProductIndex = consolidatedProducts.findIndex(
-            (p) => p._id === product._id
+
+        const updatedProducts = productData.map((product) => {
+          const localProduct = localProducts.find(
+            (lp) => lp.id === product._id
           );
-          if (existingProductIndex !== -1) {
-            consolidatedProducts[existingProductIndex].quantity += 1;
-          } else {
-            product.quantity = 1;
-            consolidatedProducts.push(product);
-          }
+          return {
+            ...product,
+            quantity: localProduct.quantity,
+          };
         });
 
-        setProducts(consolidatedProducts);
-        setIsLoading(false);
-        toast.success("Checkout successfully!");
+        setProducts(updatedProducts);
       } catch (error) {
         console.error(error);
-        setIsLoading(false); // Set loading to false if an error occurs
       }
     };
-    localStorage.removeItem("cart");
-    fetchProductData();
-  }, [cartProducts]);
 
-  const subtotal = ls ? ls.getItem("totalPrice") : 0;
-  const final = parseFloat(subtotal);
+    fetchProductData();
+  }, [cartProducts, localProducts]);
+
+  const subtotal = ls ? parseInt(ls.getItem("totalPrice")) : 0;
   const deliveryFee = ls ? parseFloat(ls.getItem("deliveryFee")) : 0;
-  const taxes = subtotal * 0.1;
+  const taxes = parseInt((subtotal * 0.1).toFixed(2));
+  ls.removeItem("cart");
+  ls.removeItem("deliveryFee");
+  ls.removeItem("totalPrice");
 
   return (
     <>
@@ -96,7 +99,9 @@ export default function OrderSummary(props) {
                         <a href={product.href}>{product.name}</a>
                       </h3>
                       <p>{product.type}</p>
-                      <p>x{product.quantity}</p>
+                      <div className="w-fit rounded-md border border-gray-300 text-left text-base font-medium text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm px-2">
+                        x{product.quantity}
+                      </div>
                     </div>
                     <p className="flex-none font-medium text-gray-900">
                       ${product.price}
@@ -123,7 +128,9 @@ export default function OrderSummary(props) {
 
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
                   <dt className="text-base">Total</dt>
-                  <dd className="text-base">${final + taxes + deliveryFee}</dd>
+                  <dd className="text-base">
+                    ${subtotal + taxes + deliveryFee}
+                  </dd>
                 </div>
               </dl>
 
