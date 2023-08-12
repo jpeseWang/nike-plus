@@ -2,10 +2,11 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const userSchema = new Schema(
+const accSchema = new Schema(
   {
     name: {
       type: String,
+      unique: true,
       required: true,
     },
     email: {
@@ -25,4 +26,4 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.User || mongoose.model("User", userSchema);
+export default mongoose.models.Account || mongoose.model("Account", accSchema);

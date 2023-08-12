@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import { RadioGroup } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { classNames } from "@/utils/classNames";
+import LoadingComponent from "@/app/loading";
+import { useSession } from "next-auth/react";
 const mailingLists = [
   {
     id: 1,
@@ -26,11 +28,13 @@ const Signup = () => {
   const [inputType, setInputType] = useState("");
   const [err, setErr] = useState(false);
   const router = useRouter();
+  const session = useSession();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = e.target[2].value;
     const email = e.target[0].value;
     const password = e.target[1].value;
+    const role = "user";
 
     try {
       const res = await fetch("/api/auth/register", {
@@ -42,6 +46,7 @@ const Signup = () => {
           name,
           email,
           password,
+          role,
         }),
       });
       toast.success("Create account successfully!");
@@ -50,6 +55,12 @@ const Signup = () => {
       setErr(true);
     }
   };
+  if (session.status === "loading") {
+    return <LoadingComponent />;
+  }
+  if (session.status === "authenticated") {
+    router?.push("/marketplace");
+  }
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
