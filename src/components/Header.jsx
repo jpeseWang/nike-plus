@@ -152,10 +152,10 @@ export default function Header() {
     router.push("/auth/login");
     setMobileMenuOpen(false);
   };
-  const totalQuantity = cartProducts.reduce((total, product) => {
+  const subtotal = cartProducts.reduce((total, product) => {
     return total + product.quantity;
   }, 0);
-
+  const total = isNaN(subtotal) ? 0 : subtotal;
   return (
     <header className="bg-gray-100">
       <nav
@@ -293,9 +293,10 @@ export default function Header() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+              d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
             />
           </svg>
+
           <div className=" inline">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -315,7 +316,7 @@ export default function Header() {
               />
             </svg>
             <p className="inline mb-1 font-xs -ml-3 lg:font-lg">
-              Cart({totalQuantity})
+              Cart({total})
             </p>
           </div>
         </div>
