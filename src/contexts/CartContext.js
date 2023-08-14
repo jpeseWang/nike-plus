@@ -7,11 +7,18 @@ export const CartContext = createContext({});
 export function CartContextProvider({ children }) {
   const ls = typeof window !== "undefined" ? window.localStorage : null;
   const [cartProducts, setCartProducts] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
+
   useEffect(() => {
     if (cartProducts?.length > 0) {
       ls?.setItem("cart", JSON.stringify(cartProducts));
     }
   }, [cartProducts]);
+  useEffect(() => {
+    if (userInfo?.length > 0) {
+      ls?.setItem("userInfo", JSON.stringify(userInfo));
+    }
+  }, [userInfo]);
 
   useEffect(() => {
     if (ls && ls.getItem("cart")) {
@@ -53,6 +60,15 @@ export function CartContextProvider({ children }) {
 
     setCartProducts(updatedCart);
   }
+  function addUserInfo(Email, name, address, phone, payment) {
+    setUserInfo({
+      email: Email,
+      name: name,
+      address: address,
+      phone: phone,
+      payment: payment,
+    });
+  }
 
   return (
     <CartContext.Provider
@@ -62,6 +78,7 @@ export function CartContextProvider({ children }) {
         addProduct,
         removeProduct,
         updateProduct,
+        addUserInfo,
       }}
     >
       {children}

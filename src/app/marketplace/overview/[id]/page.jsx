@@ -101,7 +101,7 @@ export default function ProductOverview({ params }) {
     <div className="bg-white">
       <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
         <button
-          class="text-base font-semibold text-indigo-600 hover:text-indigo-500 my-6"
+          class="text-base font-semibold text-indigo-600 hover:text-indigo-500 my-6 ml-2"
           onClick={() => {
             router.push("/marketplace");
           }}

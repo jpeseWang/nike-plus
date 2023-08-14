@@ -50,11 +50,11 @@ export default function OrderSummary(props) {
   const subtotal = ls ? parseInt(ls.getItem("totalPrice")) : 0;
   const deliveryFee = ls ? parseFloat(ls.getItem("deliveryFee")) : 0;
   const taxes = parseInt((subtotal * 0.1).toFixed(2));
-  if (ls) {
-    ls.removeItem("cart");
-    ls.removeItem("deliveryFee");
-    ls.removeItem("totalPrice");
-  }
+  // if (ls) {
+  //   ls.removeItem("cart");
+  //   ls.removeItem("deliveryFee");
+  //   ls.removeItem("totalPrice");
+  // }
 
   return (
     <>

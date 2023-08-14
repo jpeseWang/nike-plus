@@ -1,8 +1,7 @@
 "use client";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { RadioGroup } from "@headlessui/react";
-import OrderPrice from "./priceSummary";
 import {
   CheckCircleIcon,
   ChevronDownIcon,
@@ -10,8 +9,8 @@ import {
 } from "@heroicons/react/20/solid";
 import { classNames } from "@/utils/classNames";
 import { CartContext } from "@/contexts/CartContext";
-import { calculateTotalPrice } from "@/utils/orderPrice";
 import getData from "@/utils/getData";
+import emailjs from "@emailjs/browser";
 const deliveryMethods = [
   {
     id: 1,
@@ -22,7 +21,7 @@ const deliveryMethods = [
   { id: 2, title: "Express", turnaround: "2–5 business days", price: 16 },
 ];
 const paymentMethods = [
-  { id: "credit-card", title: "Pay on delivery" },
+  { id: "credit-card", title: "Cash on delivery (COD)" },
   { id: "paypal", title: "Credit Card" },
   { id: "etransfer", title: "VNPAY QR" },
 ];
@@ -34,11 +33,13 @@ export default function Example() {
     deliveryMethods[0]
   );
 
-  const { cartProducts, removeProduct } = useContext(CartContext);
+  const { cartProducts, removeProduct, addUserInfo } = useContext(CartContext);
 
   const [products, setProducts] = useState([]);
   const [localProducts, setLocalProducts] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
   const router = useRouter();
+  const form = useRef();
 
   useEffect(() => {
     const lp = JSON.parse(localStorage.getItem("cart"));
@@ -73,13 +74,46 @@ export default function Example() {
   }, [cartProducts, localProducts]);
 
   // const totalPrice = calculateTotalPrice(products, selectedDeliveryMethod);
-  const handleConfirmOrder = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const deliveryFee = selectedDeliveryMethod.price;
-    await ls.setItem("totalPrice", totalPrice);
-    await ls.setItem("deliveryFee", deliveryFee);
 
+    const email = event.target[0].value;
+    const firstName = event.target[1].value;
+    const lastName = event.target[2].value;
+    const address = event.target[4].value;
+    const phone = event.target[10].value;
+    const payment = event.target[6].value;
+    const fullName = `${firstName} ${lastName}`;
+
+    await addUserInfo(email, fullName, address, phone, payment);
+    setUserInfo({
+      email: email,
+      name: fullName,
+      address: address,
+      phone: phone,
+      payment: payment,
+    });
+    ls.setItem("totalPrice", totalPrice);
+    ls.setItem("deliveryFee", deliveryFee);
+    emailjs
+      .sendForm(
+        "service_33vwm6b",
+        "template_akfqww9",
+        form.current,
+        "Sx3A5w1_jiGws4FGf"
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
     router.push("/order/summary");
   };
+  console.log(userInfo);
 
   return (
     <div className="bg-gray-50">
@@ -97,7 +131,7 @@ export default function Example() {
           <h1 className="sr-only">Checkout</h1>
 
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-            <div>
+            <form ref={form} onSubmit={handleSubmit}>
               <div>
                 <h2 className="text-lg font-medium text-gray-900">
                   Contact information
@@ -113,8 +147,8 @@ export default function Example() {
                   <div className="mt-1">
                     <input
                       type="email"
-                      id="email-address"
-                      name="email-address"
+                      id="email"
+                      name="email"
                       autoComplete="email"
                       className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-2 py-2"
                     />
@@ -139,7 +173,7 @@ export default function Example() {
                       <input
                         type="text"
                         id="first-name"
-                        name="first-name"
+                        name="firstName"
                         autoComplete="given-name"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-2 py-2"
                       />
@@ -156,8 +190,8 @@ export default function Example() {
                     <div className="mt-1">
                       <input
                         type="text"
-                        id="last-name"
-                        name="last-name"
+                        id="lastName"
+                        name="lastName"
                         autoComplete="family-name"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-2 py-2"
                       />
@@ -251,6 +285,7 @@ export default function Example() {
                         <option>United States</option>
                         <option>Canada</option>
                         <option>Mexico</option>
+                        <option>Viet Nam</option>
                       </select>
                     </div>
                   </div>
@@ -492,125 +527,125 @@ export default function Example() {
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Order summary */}
-            <div className="mt-10 lg:mt-0">
-              <h2 className="text-lg font-medium text-gray-900">
-                Order summary
-              </h2>
+              {/* Order summary */}
+              <div className="mt-10 lg:mt-0">
+                <h2 className="text-lg font-medium text-gray-900">
+                  Order summary
+                </h2>
 
-              <div className="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
-                <h3 className="sr-only">Items in your cart</h3>
-                <ul role="list" className="divide-y divide-gray-200">
-                  {products.map((product) => (
-                    <li key={product.id} className="flex px-4 py-6 sm:px-6">
-                      <div className="flex-shrink-0">
-                        <img
-                          src={product.imageSrc}
-                          className="w-20 rounded-md"
-                        />
-                      </div>
-
-                      <div className="ml-6 flex flex-1 flex-col">
-                        <div className="flex">
-                          <div className="min-w-0 flex-1">
-                            <h4 className="text-sm">
-                              <a
-                                href={product.href}
-                                className="font-medium text-gray-700 hover:text-gray-800"
-                              >
-                                {product.name}
-                              </a>
-                            </h4>
-                            <p className="mt-1 text-sm text-gray-500">
-                              {product.type}
-                            </p>
-                            <p className="mt-1 text-sm text-gray-500">
-                              {product.description.slice(0, 70)}...
-                            </p>
-                          </div>
-
-                          <div className="ml-4 flow-root flex-shrink-0">
-                            <button
-                              type="button"
-                              className="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500"
-                            >
-                              <span className="sr-only">Remove</span>
-                              <TrashIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                                onClick={() => removeProduct(product._id)}
-                              />
-                            </button>
-                          </div>
+                <div className="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
+                  <h3 className="sr-only">Items in your cart</h3>
+                  <ul role="list" className="divide-y divide-gray-200">
+                    {products.map((product) => (
+                      <li key={product.id} className="flex px-4 py-6 sm:px-6">
+                        <div className="flex-shrink-0">
+                          <img
+                            src={product.imageSrc}
+                            className="w-20 rounded-md"
+                          />
                         </div>
 
-                        <div className="flex flex-1 items-end justify-between pt-2">
-                          <p className="mt-1 text-sm font-medium text-gray-900">
-                            ${product.price}
-                          </p>
+                        <div className="ml-6 flex flex-1 flex-col">
+                          <div className="flex">
+                            <div className="min-w-0 flex-1">
+                              <h4 className="text-sm">
+                                <a
+                                  href={product.href}
+                                  className="font-medium text-gray-700 hover:text-gray-800"
+                                >
+                                  {product.name}
+                                </a>
+                              </h4>
+                              <p className="mt-1 text-sm text-gray-500">
+                                {product.type}
+                              </p>
+                              <p className="mt-1 text-sm text-gray-500">
+                                {product.description.slice(0, 70)}...
+                              </p>
+                            </div>
 
-                          <div className="ml-4">
-                            <label htmlFor="quantity" className="sr-only">
-                              Quantity
-                            </label>
-                            <div
-                              id="quantity"
-                              name="quantity"
-                              className="rounded-md border border-gray-300 text-left text-base font-medium text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm px-2"
-                            >
-                              x{product.quantity}
+                            <div className="ml-4 flow-root flex-shrink-0">
+                              <button
+                                type="button"
+                                className="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500"
+                              >
+                                <span className="sr-only">Remove</span>
+                                <TrashIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                  onClick={() => removeProduct(product._id)}
+                                />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-1 items-end justify-between pt-2">
+                            <p className="mt-1 text-sm font-medium text-gray-900">
+                              ${product.price}
+                            </p>
+
+                            <div className="ml-4">
+                              <label htmlFor="quantity" className="sr-only">
+                                Quantity
+                              </label>
+                              <div
+                                id="quantity"
+                                name="quantity"
+                                className="rounded-md border border-gray-300 text-left text-base font-medium text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm px-2"
+                              >
+                                x{product.quantity}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                      </li>
+                    ))}
+                  </ul>
 
-                <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
-                  <div className="flex items-center justify-between">
-                    <dt className="text-sm">Subtotal</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      ${totalPrice}
-                    </dd>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <dt className="text-sm">Shipping</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      ${selectedDeliveryMethod.price}.00
-                    </dd>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <dt className="text-sm">Taxes</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      ${(totalPrice * 0.1).toFixed(2)}
-                    </dd>
-                  </div>
-                  <div className="flex items-center justify-between border-t border-gray-200 pt-6">
-                    <dt className="text-base font-medium">Total</dt>
-                    <dd className="text-base font-medium text-gray-900">
-                      $
-                      {(
-                        totalPrice +
-                        selectedDeliveryMethod.price +
-                        totalPrice * 0.1
-                      ).toFixed(2)}
-                    </dd>
-                  </div>
-                </dl>
+                  <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
+                    <div className="flex items-center justify-between">
+                      <dt className="text-sm">Subtotal</dt>
+                      <dd className="text-sm font-medium text-gray-900">
+                        ${totalPrice}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-sm">Shipping</dt>
+                      <dd className="text-sm font-medium text-gray-900">
+                        ${selectedDeliveryMethod.price}.00
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-sm">Taxes</dt>
+                      <dd className="text-sm font-medium text-gray-900">
+                        ${(totalPrice * 0.1).toFixed(2)}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-6">
+                      <dt className="text-base font-medium">Total</dt>
+                      <dd className="text-base font-medium text-gray-900">
+                        $
+                        {(
+                          totalPrice +
+                          selectedDeliveryMethod.price +
+                          totalPrice * 0.1
+                        ).toFixed(2)}
+                      </dd>
+                    </div>
+                  </dl>
 
-                <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-                  <button
-                    className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                    onClick={handleConfirmOrder}
-                  >
-                    Confirm order
-                  </button>
+                  <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+                    <button
+                      type="submit"
+                      className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                    >
+                      Confirm order
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </main>
