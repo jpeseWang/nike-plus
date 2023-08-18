@@ -3,13 +3,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
 import { CartContext } from "@/contexts/CartContext";
 import { useRouter } from "next/navigation";
-import {
-  Bars3Icon,
-  MagnifyingGlassIcon,
-  ShoppingBagIcon,
-  XMarkIcon as XMarkIconOutline,
-  SpinnerIcon,
-} from "@heroicons/react/24/outline";
+
 import {
   CheckIcon,
   ClockIcon,
