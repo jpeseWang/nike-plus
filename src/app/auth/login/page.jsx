@@ -1,12 +1,20 @@
 "use client";
 import nike from "@/assets/images/nike.svg.png";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import LoadingComponent from "@/app/loading";
 const Login = () => {
   const router = useRouter();
   const session = useSession();
+  const params = useSearchParams();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  useEffect(() => {
+    setError(params.get("error"));
+    setSuccess(params.get("success"));
+  }, [params]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target[0].value;
@@ -97,6 +105,7 @@ const Login = () => {
               >
                 SIGN IN
               </button>
+              <p className="my-2 text-red-500 font-medium"> {error && error}</p>
             </div>
           </form>
           <div className="mt-10">

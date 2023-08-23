@@ -23,8 +23,7 @@ const handler = NextAuth({
           if (user) {
             const isPasswordCorrect = await bcrypt.compare(
               credentials.password,
-              user.password,
-              console.log("login successful")
+              user.password
             );
 
             if (isPasswordCorrect) {

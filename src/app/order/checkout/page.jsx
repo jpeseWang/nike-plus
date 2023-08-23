@@ -73,7 +73,7 @@ export default function Example() {
     fetchProductData();
   }, [cartProducts, localProducts]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const deliveryFee = selectedDeliveryMethod.price;
 
@@ -95,12 +95,13 @@ export default function Example() {
     });
     ls.setItem("totalPrice", totalPrice);
     ls.setItem("deliveryFee", deliveryFee);
+
     emailjs
-      .sendForm(
-        "service_33vwm6b",
-        "template_akfqww9",
-        form.current,
-        "Sx3A5w1_jiGws4FGf"
+      .send(
+        "service_p7v3jef",
+        "template_7qldsv1",
+        templateParams,
+        "EgKI2lPX0TVNbzTbs"
       )
       .then(
         (result) => {
@@ -112,7 +113,14 @@ export default function Example() {
       );
     router.push("/order/summary");
   };
-
+  const subTotal = totalPrice;
+  const deliveryFee = selectedDeliveryMethod.price;
+  const taxes = (totalPrice * 0.1).toFixed(2);
+  const finalPrice = (
+    totalPrice +
+    selectedDeliveryMethod.price +
+    totalPrice * 0.1
+  ).toFixed(2);
   return (
     <div className="bg-gray-50">
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
@@ -127,7 +135,6 @@ export default function Example() {
         </button>
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <h1 className="sr-only">Checkout</h1>
-
           <form
             onSubmit={handleSubmit}
             ref={form}
@@ -157,7 +164,6 @@ export default function Example() {
                   </div>
                 </div>
               </div>
-
               <div className="mt-10 border-t border-gray-200 pt-10">
                 <h2 className="text-lg font-medium text-gray-900">
                   Shipping information
@@ -347,7 +353,15 @@ export default function Example() {
                   </div>
                 </div>
               </div>
-
+              {/* Product price */}
+              <input className="hidden" name="subTotal" value={subTotal} />
+              <input
+                className="hidden"
+                name="deliveryFee"
+                value={deliveryFee}
+              />
+              <input className="hidden" name="taxes" value={taxes} />
+              <input className="hidden" name="finalPrice" value={finalPrice} />
               <div className="mt-10 border-t border-gray-200 pt-10">
                 <RadioGroup
                   value={selectedDeliveryMethod}
@@ -417,7 +431,6 @@ export default function Example() {
                   </div>
                 </RadioGroup>
               </div>
-
               {/* Payment */}
               <div className="mt-10 border-t border-gray-200 pt-10">
                 <h2 className="text-lg font-medium text-gray-900">Payment</h2>
@@ -544,6 +557,7 @@ export default function Example() {
                     <li key={product.id} className="flex px-4 py-6 sm:px-6">
                       <div className="flex-shrink-0">
                         <img
+                          id="imageSrc"
                           src={product.imageSrc}
                           className="w-20 rounded-md"
                         />
@@ -567,6 +581,27 @@ export default function Example() {
                               {product.description.slice(0, 70)}...
                             </p>
                           </div>
+                          {/* Product information  */}
+                          <input
+                            className="hidden"
+                            name="productImg"
+                            value={product.imageSrc}
+                          />
+                          <input
+                            className="hidden"
+                            name="productName"
+                            value={product.name}
+                          />
+                          <input
+                            className="hidden"
+                            name="productPrice"
+                            value={product.price}
+                          />
+                          <input
+                            className="hidden"
+                            name="productQuantity"
+                            value={product.quantity}
+                          />
 
                           <div className="ml-4 flow-root flex-shrink-0">
                             <button
@@ -609,31 +644,40 @@ export default function Example() {
                 <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
                   <div className="flex items-center justify-between">
                     <dt className="text-sm">Subtotal</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      ${totalPrice}
+                    <dd
+                      className="text-sm font-medium text-gray-900"
+                      name="subTotal"
+                    >
+                      ${subTotal}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-sm">Shipping</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      ${selectedDeliveryMethod.price}.00
+                    <dd
+                      className="text-sm font-medium text-gray-900"
+                      name="shippingFee"
+                    >
+                      ${deliveryFee}.00
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
                     <dt className="text-sm">Taxes</dt>
-                    <dd className="text-sm font-medium text-gray-900">
-                      ${(totalPrice * 0.1).toFixed(2)}
+                    <dd
+                      className="text-sm font-medium text-gray-900"
+                      name="taxes"
+                    >
+                      ${taxes}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between border-t border-gray-200 pt-6">
-                    <dt className="text-base font-medium">Total</dt>
-                    <dd className="text-base font-medium text-gray-900">
-                      $
-                      {(
-                        totalPrice +
-                        selectedDeliveryMethod.price +
-                        totalPrice * 0.1
-                      ).toFixed(2)}
+                    <dt className="text-base font-medium" id="tauto">
+                      Total
+                    </dt>
+                    <dd
+                      className="text-base font-medium text-gray-900"
+                      name="totalPrice"
+                    >
+                      ${finalPrice}
                     </dd>
                   </div>
                 </dl>

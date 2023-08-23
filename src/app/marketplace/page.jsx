@@ -100,7 +100,9 @@ const footerNavigation = {
 // https://nike-plus.vercel.app/api/products;
 // `http://localhost:3000/api/products/`
 async function getData() {
-  const res = await fetch("https://nike-plus.vercel.app/api/products");
+  const res = await fetch(
+    "https://nike-plus.vercel.app/api/products/api/products"
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
@@ -406,7 +408,7 @@ export default function Example() {
                       <a
                         key={product._id}
                         href={`/marketplace/overview/${product._id}`}
-                        className="group text-sm"
+                        className="group text-sm my-4"
                       >
                         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
                           <img
@@ -424,7 +426,6 @@ export default function Example() {
                         <p className="mt-2 text-medium font-medium text-base text-gray-900">
                           ${product.price}
                         </p>
-                        <button>Add to cart</button>
                       </a>
                     ))}
                   </div>
