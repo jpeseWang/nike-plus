@@ -100,9 +100,7 @@ const footerNavigation = {
 // https://nike-plus.vercel.app/api/products;
 // `http://localhost:3000/api/products/`
 async function getData() {
-  const res = await fetch(
-    "https://nike-plus.vercel.app/api/products/api/products"
-  );
+  const res = await fetch("https://nike-plus.vercel.app/api/products");
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");

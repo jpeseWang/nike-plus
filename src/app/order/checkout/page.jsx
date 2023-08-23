@@ -1,6 +1,9 @@
+/* eslint-disable @next/next/no-sync-scripts */
 "use client";
+import React from "react";
 import { useState, useContext, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Head from "next/head";
 import { RadioGroup } from "@headlessui/react";
 import {
   CheckCircleIcon,
@@ -11,6 +14,8 @@ import { classNames } from "@/utils/classNames";
 import { CartContext } from "@/contexts/CartContext";
 import getData from "@/utils/getData";
 import emailjs from "@emailjs/browser";
+import Payment from "./Payment";
+
 const deliveryMethods = [
   {
     id: 1,
@@ -21,9 +26,8 @@ const deliveryMethods = [
   { id: 2, title: "Express", turnaround: "2–5 business days", price: 16 },
 ];
 const paymentMethods = [
-  { id: "credit-card", title: "Pay on delivery" },
-  { id: "paypal", title: "Credit Card" },
-  { id: "etransfer", title: "VNPAY QR" },
+  { id: "credit-card", title: "Cash on delivery (COD)" },
+  { id: "paypal", title: "Credit Card/ Paypal" },
 ];
 
 export default function Example() {
@@ -34,7 +38,6 @@ export default function Example() {
   );
 
   const { cartProducts, removeProduct, addUserInfo } = useContext(CartContext);
-
   const [products, setProducts] = useState([]);
   const [localProducts, setLocalProducts] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
@@ -123,6 +126,12 @@ export default function Example() {
   ).toFixed(2);
   return (
     <div className="bg-gray-50">
+      <Head>
+        <script
+          src={`https://www.paypal.com/sdk/js?client-id=ASbg4nJCxBhUH4X0nzLC3y6mq1PjGOZS3Qv21q5d5cco7O9U5LNKo_YyuLFng2YkDzzZKDLLVVLgdHtd`}
+          data-sdk-integration-source="react-paypal-js"
+        ></script>
+      </Head>
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
         {" "}
         <button
@@ -468,78 +477,8 @@ export default function Example() {
                   </div>
                 </fieldset>
 
-                <div className="mt-6 grid grid-cols-4 gap-x-4 gap-y-6">
-                  <div className="col-span-4">
-                    <label
-                      htmlFor="card-number"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Card number
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="card-number"
-                        name="card-number"
-                        autoComplete="cc-number"
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-2 py-2"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-span-4">
-                    <label
-                      htmlFor="name-on-card"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Name on card
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="name-on-card"
-                        name="name-on-card"
-                        autoComplete="cc-name"
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-2 py-2"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-span-3">
-                    <label
-                      htmlFor="expiration-date"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Expiration date (MM/YY)
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        name="expiration-date"
-                        id="expiration-date"
-                        autoComplete="cc-exp"
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-2 py-2"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="cvc"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      CVC
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        name="cvc"
-                        id="cvc"
-                        autoComplete="csc"
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-2 py-2"
-                      />
-                    </div>
-                  </div>
+                <div className="mt-6 gap-x-4 gap-y-6">
+                  <Payment totalPrice={finalPrice} />
                 </div>
               </div>
             </div>

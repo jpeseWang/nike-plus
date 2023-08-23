@@ -4,7 +4,7 @@ export const CountrySelector = () => {
       <select
         id="country"
         name="country"
-        className="block w-full rounded border-0 py-2.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 my-4"
+        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-2 py-2"
         defaultValue={"Viet Nam"}
       >
         <option value="Afghanistan">Afghanistan</option>
