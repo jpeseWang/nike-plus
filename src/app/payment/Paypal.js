@@ -1,10 +1,14 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import React from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 class PaypalButton extends React.Component {
   render() {
     const { price } = this.props;
+
     return (
       <PayPalScriptProvider
         options={{
@@ -27,11 +31,12 @@ class PaypalButton extends React.Component {
           onApprove={(data, actions) => {
             return actions.order.capture().then(function (details) {
               // Show a success message to the buyer
-              alert(
-                "Transaction completed by " +
+              toast.success(
+                "Transaction completed successfully by " +
                   details.payer.name.given_name +
                   "!"
               );
+              redirect("/");
             });
           }}
         />

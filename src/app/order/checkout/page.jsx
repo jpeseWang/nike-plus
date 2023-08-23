@@ -14,7 +14,6 @@ import { classNames } from "@/utils/classNames";
 import { CartContext } from "@/contexts/CartContext";
 import getData from "@/utils/getData";
 import emailjs from "@emailjs/browser";
-import Payment from "./Payment";
 
 const deliveryMethods = [
   {
@@ -26,7 +25,7 @@ const deliveryMethods = [
   { id: 2, title: "Express", turnaround: "2–5 business days", price: 16 },
 ];
 const paymentMethods = [
-  { id: "credit-card", title: "Cash on delivery (COD)" },
+  { id: "cod", title: "Cash on delivery (COD)" },
   { id: "paypal", title: "Credit Card/ Paypal" },
 ];
 
@@ -36,6 +35,7 @@ export default function Example() {
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
 
   const { cartProducts, removeProduct, addUserInfo } = useContext(CartContext);
   const [products, setProducts] = useState([]);
@@ -79,7 +79,6 @@ export default function Example() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const deliveryFee = selectedDeliveryMethod.price;
-
     const email = event.target[0].value;
     const firstName = event.target[1].value;
     const lastName = event.target[2].value;
@@ -97,13 +96,14 @@ export default function Example() {
       payment: payment,
     });
     ls.setItem("totalPrice", totalPrice);
+    ls.setItem("finalPrice", finalPrice);
     ls.setItem("deliveryFee", deliveryFee);
 
     emailjs
-      .send(
+      .sendForm(
         "service_p7v3jef",
         "template_7qldsv1",
-        templateParams,
+        form.current,
         "EgKI2lPX0TVNbzTbs"
       )
       .then(
@@ -114,7 +114,11 @@ export default function Example() {
           console.log(error.text);
         }
       );
-    router.push("/order/summary");
+    if (selectedPaymentMethod.id === "paypal") {
+      router.push("/payment");
+    } else {
+      router.push("/order/summary");
+    }
   };
   const subTotal = totalPrice;
   const deliveryFee = selectedDeliveryMethod.price;
@@ -124,14 +128,10 @@ export default function Example() {
     selectedDeliveryMethod.price +
     totalPrice * 0.1
   ).toFixed(2);
+
+  console.log(selectedPaymentMethod.id);
   return (
     <div className="bg-gray-50">
-      <Head>
-        <script
-          src={`https://www.paypal.com/sdk/js?client-id=ASbg4nJCxBhUH4X0nzLC3y6mq1PjGOZS3Qv21q5d5cco7O9U5LNKo_YyuLFng2YkDzzZKDLLVVLgdHtd`}
-          data-sdk-integration-source="react-paypal-js"
-        ></script>
-      </Head>
       <main className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
         {" "}
         <button
@@ -447,25 +447,22 @@ export default function Example() {
                 <fieldset className="mt-4">
                   <legend className="sr-only">Payment type</legend>
                   <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
-                    {paymentMethods.map((paymentMethod, paymentMethodIdx) => (
-                      <div key={paymentMethod.id} className="flex items-center">
-                        {paymentMethodIdx === 0 ? (
-                          <input
-                            id={paymentMethod.id}
-                            name="payment-type"
-                            type="radio"
-                            defaultChecked
-                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                        ) : (
-                          <input
-                            id={paymentMethod.id}
-                            name="payment-type"
-                            type="radio"
-                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                        )}
-
+                    {paymentMethods.map((paymentMethod) => (
+                      <div
+                        key={paymentMethod.id}
+                        className="flex items-center"
+                        defaultValue={selectedPaymentMethod}
+                        onClick={() => {
+                          setSelectedPaymentMethod(paymentMethod);
+                        }}
+                      >
+                        <input
+                          id={paymentMethod.id}
+                          name="payment-type"
+                          type="radio"
+                          defaultValue={selectedPaymentMethod}
+                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
                         <label
                           htmlFor={paymentMethod.id}
                           className="ml-3 block text-sm font-medium text-gray-700"
@@ -476,10 +473,6 @@ export default function Example() {
                     ))}
                   </div>
                 </fieldset>
-
-                <div className="mt-6 gap-x-4 gap-y-6">
-                  <Payment totalPrice={finalPrice} />
-                </div>
               </div>
             </div>
 
