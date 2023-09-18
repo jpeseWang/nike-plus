@@ -13,6 +13,11 @@ const userSchema = new Schema(
       unique: true,
       required: true,
     },
+    dob: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     password: {
       type: String,
       required: true,

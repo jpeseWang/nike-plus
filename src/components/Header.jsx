@@ -5,7 +5,6 @@ import { Dialog } from "@headlessui/react";
 import { useSession } from "next-auth/react";
 import {
   Bars3Icon,
-  MagnifyingGlassIcon,
   XMarkIcon,
   ShoppingCartIcon,
   QuestionMarkCircleIcon,
@@ -280,7 +279,8 @@ export default function Header() {
               />
             </svg>
           )}
-          {session.status === "authenticated" ? (
+          {session.status === "authenticated" &&
+          session.data.role === "admin" ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

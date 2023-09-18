@@ -96,11 +96,9 @@ const footerNavigation = {
     { name: "Twitter", href: "#" },
   ],
 };
-// TODO: Change this when push to repo
-// https://nike-plus.vercel.app/api/products;
-// `http://localhost:3000/api/products/`
+
 async function getData() {
-  const res = await fetch("https://nike-plus.vercel.app/api/products");
+  const res = await fetch("/api/products");
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");

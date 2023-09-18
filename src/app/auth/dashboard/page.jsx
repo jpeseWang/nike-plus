@@ -3,13 +3,12 @@ import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import LoadingComponent from "@/app/loading";
 import { XMarkIcon as XMarkIconMini } from "@heroicons/react/20/solid";
 
 export default function Example() {
   const session = useSession();
-  console.log(session);
+  console.log("CHECK > >", session);
 
   const router = useRouter();
 
@@ -24,7 +23,9 @@ export default function Example() {
   if (session.status === "loading") {
     return <LoadingComponent />;
   }
-
+  if (session.data.role !== "admin") {
+    router?.push("/marketplace");
+  }
   if (session.status === "unauthenticated") {
     router?.push("/auth/login");
   }
@@ -36,18 +37,7 @@ export default function Example() {
     const type = e.target[2].value;
     const description = e.target[3].value;
     const imageSrc = e.target[4].value;
-    console.log(
-      "Name: ",
-      name,
-      "Price",
-      price,
-      "Type: ",
-      type,
-      "DEs: ",
-      description,
-      "IMG:",
-      imageSrc
-    );
+
     try {
       await fetch("/api/products", {
         method: "POST",

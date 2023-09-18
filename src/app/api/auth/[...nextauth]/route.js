@@ -51,6 +51,22 @@ const handler = NextAuth({
   pages: {
     error: "/auth/login",
   },
+  callbacks: {
+    jwt: ({ token, user, trigger }) => {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
+      return token;
+    },
+    session: ({ session, token }) => {
+      if (token) {
+        session.id = token.id;
+        session.role = token.role;
+      }
+      return session;
+    },
+  },
 });
 
 export { handler as GET, handler as POST };

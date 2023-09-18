@@ -11,6 +11,7 @@ const Login = () => {
   const params = useSearchParams();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setError(params.get("error"));
     setSuccess(params.get("success"));
@@ -19,7 +20,14 @@ const Login = () => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
-    signIn("credentials", { email, password });
+    setLoading(true);
+    try {
+      await signIn("credentials", { email, password });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (session.status === "loading") {
@@ -28,6 +36,7 @@ const Login = () => {
   if (session.status === "authenticated") {
     router?.push("/auth/dashboard");
   }
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -103,7 +112,7 @@ const Login = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-sm bg-black px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                SIGN IN
+                {loading ? <span>PROCESSING...</span> : <span>SIGN IN</span>}
               </button>
               <p className="my-2 text-red-500 font-medium"> {error && error}</p>
             </div>
@@ -128,14 +137,6 @@ const Login = () => {
                   signIn("google");
                 }}
               >
-                {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 488 512"
-                  fill="currentColor"
-                >
-                  <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-                </svg> */}
                 <img
                   className="h-6 w-6"
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1176px-Google_%22G%22_Logo.svg.png?20230305195327"
@@ -148,7 +149,7 @@ const Login = () => {
           </div>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Not a member?{" "}
+            Not a member?
             <button
               onClick={() => router.push("/auth/signup")}
               className=" leading-6 text-black underline"
