@@ -28,6 +28,11 @@ const productSchema = new Schema(
       type: String,
       require: true,
     },
+    defaultImg: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,

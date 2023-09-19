@@ -19,14 +19,11 @@ import {
 } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { CartContext } from "@/contexts/CartContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import getData from "@/utils/getData";
 import LoadingComponent from "@/app/loading";
+import Link from "next/link";
 const product = {
-  name: "Zip Tote Basket",
-  price: "$140",
-  rating: 4,
-
   colors: [
     {
       name: "Washed Black",
@@ -59,6 +56,8 @@ const product = {
     // More sections...
   ],
 };
+const colorVariants = ["Black", "White", "Blue"];
+const sizeVariants = ["37", "38", "39", "40", "41", "42"];
 const relatedProducts = [
   {
     id: 1,
@@ -81,17 +80,19 @@ function classNames(...classes) {
 export default function ProductOverview({ params }) {
   const { addProduct } = useContext(CartContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
-  const router = useRouter();
 
+  const [data, setData] = useState({});
+  const searchParams = useSearchParams();
+  const selectedColor = searchParams.get("color");
+  const selectedSize = searchParams.get("size");
+  const router = useRouter();
+  const searchParms = useSearchParams();
   useEffect(() => {
     getData(params.id)
       .then((data) => setData(data))
       .catch((error) => console.error(error));
     setIsLoading(false);
   }, [params.id]);
-
-  const [selectedColor, setSelectedColor] = useState(product.colors[1]);
 
   const addFeaturedToCart = () => {
     addProduct(data._id, data.price);
@@ -202,42 +203,51 @@ export default function ProductOverview({ params }) {
 
                   <div className="mt-6">
                     {/* Colors */}
-                    <div>
-                      <h3 className="text-sm text-gray-600">Color</h3>
+                    <div className="mt-4">
+                      <h3 className="text-sm text-gray-600">Colors</h3>
 
-                      <RadioGroup
-                        value={selectedColor}
-                        onChange={setSelectedColor}
-                        className="mt-2"
-                      >
+                      <RadioGroup value={selectedColor} className="mt-2">
                         <RadioGroup.Label className="sr-only">
                           Choose a color
                         </RadioGroup.Label>
                         <div className="flex items-center space-x-3">
-                          {product.colors.map((color) => (
-                            <RadioGroup.Option
-                              key={color.name}
-                              value={color}
-                              className={({ active, checked }) =>
-                                classNames(
-                                  color.selectedColor,
-                                  active && checked ? "ring ring-offset-1" : "",
-                                  !active && checked ? "ring-2" : "",
-                                  "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none"
-                                )
-                              }
+                          {colorVariants.map((color, index) => (
+                            <Link
+                              key={index}
+                              href={`?color=${color}&size=${selectedSize}`}
+                              className={`bg-gray-100 px-2 py-1 rounded border-2 ${
+                                selectedColor === color
+                                  ? "border-blue-500"
+                                  : "border-gray-200"
+                              } `}
                             >
-                              <RadioGroup.Label as="span" className="sr-only">
-                                {color.name}
-                              </RadioGroup.Label>
-                              <span
-                                aria-hidden="true"
-                                className={classNames(
-                                  color.bgColor,
-                                  "h-8 w-8 rounded-full border border-black border-opacity-10"
-                                )}
-                              />
-                            </RadioGroup.Option>
+                              {color}
+                            </Link>
+                          ))}
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    <div className="mt-4">
+                      <h3 className="text-sm text-gray-600">Select Size</h3>
+
+                      <RadioGroup value={selectedSize} className="mt-2">
+                        <RadioGroup.Label className="sr-only">
+                          Choose a color
+                        </RadioGroup.Label>
+                        <div className="flex items-center space-x-3">
+                          {sizeVariants.map((size, index) => (
+                            <Link
+                              key={index}
+                              href={`?color=${selectedColor}&size=${size}`}
+                              className={`bg-gray-100 px-2 py-1 rounded border-2 ${
+                                selectedSize === size
+                                  ? "border-blue-500"
+                                  : "border-gray-200"
+                              } `}
+                            >
+                              EU {size}
+                            </Link>
                           ))}
                         </div>
                       </RadioGroup>
