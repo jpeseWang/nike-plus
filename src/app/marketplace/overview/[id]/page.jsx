@@ -1,21 +1,15 @@
 "use client";
+import Link from "next/link";
+import useSWR from "swr";
 import { useState, useEffect, useContext } from "react";
 import { Disclosure, RadioGroup, Tab } from "@headlessui/react";
-import {
-  HeartIcon,
-  MagnifyingGlassIcon,
-  MinusIcon,
-  PlusIcon,
-  ShoppingBagIcon,
-  UserIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { HeartIcon, MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { StarIcon } from "@heroicons/react/20/solid";
-import { CartContext } from "@/contexts/CartContext";
 import { useRouter, useSearchParams } from "next/navigation";
-import getData from "@/utils/getData";
 import LoadingComponent from "@/app/loading";
-import Link from "next/link";
+
+import { CartContext } from "@/contexts/CartContext";
+import { classNames } from "@/utils/classNames";
 const product = {
   name: "Zip Tote Basket",
   price: "$140",
@@ -78,31 +72,21 @@ const relatedProducts = [
   // More products...
 ];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function ProductOverview({ params }) {
   const { addProduct } = useContext(CartContext);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [data, setData] = useState({});
   const searchParams = useSearchParams();
   const selectedColor = searchParams.get("color");
   const selectedSize = searchParams.get("size");
   const router = useRouter();
-
-  useEffect(() => {
-    getData(params.id)
-      .then((data) => setData(data))
-      .catch((error) => console.error(error));
-    setIsLoading(false);
-  }, [params.id]);
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const { data, mutate, error, isLoading } = useSWR(
+    `/api/products/${params.id}`,
+    fetcher
+  );
 
   const addFeaturedToCart = () => {
     addProduct(data._id, data.price);
   };
-  console.log(data);
 
   return (
     <div className="bg-white">
