@@ -1,13 +1,6 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
-import {
-  Dialog,
-  Disclosure,
-  Popover,
-  RadioGroup,
-  Tab,
-  Transition,
-} from "@headlessui/react";
+import { Disclosure, RadioGroup, Tab } from "@headlessui/react";
 import {
   HeartIcon,
   MagnifyingGlassIcon,
@@ -24,6 +17,18 @@ import getData from "@/utils/getData";
 import LoadingComponent from "@/app/loading";
 import Link from "next/link";
 const product = {
+  name: "Zip Tote Basket",
+  price: "$140",
+  rating: 4,
+  images: [
+    {
+      id: 1,
+      name: "Angled view",
+      src: "https://tailwindui.com/img/ecommerce-images/product-page-03-product-01.jpg",
+      alt: "Angled front view with bag zipped and handles upright.",
+    },
+    // More images...
+  ],
   colors: [
     {
       name: "Washed Black",
@@ -57,7 +62,7 @@ const product = {
   ],
 };
 const colorVariants = ["Black", "White", "Blue"];
-const sizeVariants = ["37", "38", "39", "40", "41", "42"];
+const sizeVariants = ["37", "38", "39", "40", "41", "42", "43", "44", "45"];
 const relatedProducts = [
   {
     id: 1,
@@ -86,7 +91,7 @@ export default function ProductOverview({ params }) {
   const selectedColor = searchParams.get("color");
   const selectedSize = searchParams.get("size");
   const router = useRouter();
-  const searchParms = useSearchParams();
+
   useEffect(() => {
     getData(params.id)
       .then((data) => setData(data))
@@ -97,6 +102,7 @@ export default function ProductOverview({ params }) {
   const addFeaturedToCart = () => {
     addProduct(data._id, data.price);
   };
+  console.log(data);
 
   return (
     <div className="bg-white">
@@ -118,42 +124,46 @@ export default function ProductOverview({ params }) {
                 <Tab.Group as="div" className="flex flex-col-reverse">
                   <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
                     <Tab.List className="grid grid-cols-4 gap-6">
-                      <Tab
-                        key={data._id}
-                        className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
-                      >
-                        {({ selected }) => (
-                          <>
-                            <span className="sr-only">{data._id}</span>
-                            <span className="absolute inset-0 overflow-hidden rounded-md">
-                              <img
-                                src={data.imageSrc}
-                                alt=""
-                                className="h-full w-full object-cover object-center"
+                      {data?.defaultImg?.map((image) => (
+                        <Tab
+                          key={image.id}
+                          className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span className="absolute inset-0 overflow-hidden rounded-md">
+                                <img
+                                  src={image}
+                                  alt=""
+                                  className="h-full w-full object-cover object-center"
+                                />
+                              </span>
+                              <span
+                                className={classNames(
+                                  selected
+                                    ? "ring-indigo-500"
+                                    : "ring-transparent",
+                                  "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2"
+                                )}
+                                aria-hidden="true"
                               />
-                            </span>
-                            <span
-                              className={classNames(
-                                selected
-                                  ? "ring-indigo-500"
-                                  : "ring-transparent",
-                                "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2"
-                              )}
-                              aria-hidden="true"
-                            />
-                          </>
-                        )}
-                      </Tab>
+                            </>
+                          )}
+                        </Tab>
+                      ))}
                     </Tab.List>
                   </div>
 
                   <Tab.Panels className="aspect-h-1 aspect-w-1 w-full">
-                    <Tab.Panel key={data._id}>
-                      <img
-                        src={data.imageSrc}
-                        className="h-full w-full object-cover object-center sm:rounded-lg"
-                      />
-                    </Tab.Panel>
+                    {data?.defaultImg?.map((image) => (
+                      <Tab.Panel key={image.id}>
+                        <img
+                          src={image}
+                          alt={image.alt}
+                          className="h-full w-full object-cover object-center sm:rounded-lg"
+                        />
+                      </Tab.Panel>
+                    ))}
                   </Tab.Panels>
                 </Tab.Group>
 
@@ -215,7 +225,7 @@ export default function ProductOverview({ params }) {
                             <Link
                               key={index}
                               href={`?color=${color}&size=${selectedSize}`}
-                              className={`bg-gray-100 px-2 py-1 rounded border-2 ${
+                              className={`bg-gray-50 px-2 py-1 rounded border-2 ${
                                 selectedColor === color
                                   ? "border-blue-500"
                                   : "border-gray-200"
@@ -235,12 +245,12 @@ export default function ProductOverview({ params }) {
                         <RadioGroup.Label className="sr-only">
                           Choose a color
                         </RadioGroup.Label>
-                        <div className="flex items-center space-x-3">
+                        <div className="grid items-center grid-cols-3 gap-3">
                           {sizeVariants.map((size, index) => (
                             <Link
                               key={index}
                               href={`?color=${selectedColor}&size=${size}`}
-                              className={`bg-gray-100 px-2 py-1 rounded border-2 ${
+                              className={`bg-gray-50 px-2 py-1.5 rounded border-2 text-center ${
                                 selectedSize === size
                                   ? "border-blue-500"
                                   : "border-gray-200"

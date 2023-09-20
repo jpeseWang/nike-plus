@@ -33,6 +33,16 @@ const productSchema = new Schema(
         type: String,
       },
     ],
+    colors: [
+      {
+        title: String,
+        imgList: [
+          {
+            type: String,
+          },
+        ],
+      },
+    ],
   },
   {
     timestamps: true,
