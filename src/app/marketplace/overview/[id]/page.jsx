@@ -108,7 +108,7 @@ export default function ProductOverview({ params }) {
                 <Tab.Group as="div" className="flex flex-col-reverse">
                   <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
                     <Tab.List className="grid grid-cols-4 gap-6">
-                      {data?.defaultImg?.map((image) => (
+                      {data?.colors?.map((image) => (
                         <Tab
                           key={image.id}
                           className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
@@ -116,11 +116,21 @@ export default function ProductOverview({ params }) {
                           {({ selected }) => (
                             <>
                               <span className="absolute inset-0 overflow-hidden rounded-md">
-                                <img
-                                  src={image}
+                                {image.imgList.map((image, index) => (
+                                  // <img
+                                  //   key={index}
+                                  //   src={image}
+                                  //   alt=""
+                                  //   className="h-full w-full object-cover object-center"
+                                  // />
+                                  <p key={index}>{image.title}</p>
+                                ))}
+                                {/*                                
+                               <img
+                                  src={image.imgList[0]}
                                   alt=""
                                   className="h-full w-full object-cover object-center"
-                                />
+                                /> */}
                               </span>
                               <span
                                 className={classNames(
@@ -139,10 +149,10 @@ export default function ProductOverview({ params }) {
                   </div>
 
                   <Tab.Panels className="aspect-h-1 aspect-w-1 w-full">
-                    {data?.defaultImg?.map((image) => (
+                    {data?.colors?.map((image) => (
                       <Tab.Panel key={image.id}>
                         <img
-                          src={image}
+                          src={image.imgList}
                           alt={image.alt}
                           className="h-full w-full object-cover object-center sm:rounded-lg"
                         />
@@ -200,26 +210,39 @@ export default function ProductOverview({ params }) {
                     <div className="mt-4">
                       <h3 className="text-sm text-gray-600">Colors</h3>
 
-                      <RadioGroup value={selectedColor} className="mt-2">
-                        <RadioGroup.Label className="sr-only">
-                          Choose a color
-                        </RadioGroup.Label>
-                        <div className="flex items-center space-x-3">
-                          {colorVariants.map((color, index) => (
-                            <Link
-                              key={index}
-                              href={`?color=${color}&size=${selectedSize}`}
-                              className={`bg-gray-50 px-2 py-1 rounded border-2 ${
-                                selectedColor === color
-                                  ? "border-blue-500"
-                                  : "border-gray-200"
-                              } `}
-                            >
-                              {color}
-                            </Link>
-                          ))}
+                      <Tab.Group as="div" className="flex flex-col-reverse">
+                        <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
+                          <Tab.List className="grid grid-cols-4 gap-6">
+                            {data?.colors?.map((image) => (
+                              <Tab
+                                key={image.id}
+                                className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
+                              >
+                                {({ selected }) => (
+                                  <>
+                                    <span className="absolute inset-0 overflow-hidden rounded-md">
+                                      <img
+                                        src={image.imgList[0]}
+                                        alt=""
+                                        className="h-full w-full object-cover object-center"
+                                      />
+                                    </span>
+                                    <span
+                                      className={classNames(
+                                        selected
+                                          ? "ring-indigo-500"
+                                          : "ring-transparent",
+                                        "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2"
+                                      )}
+                                      aria-hidden="true"
+                                    />
+                                  </>
+                                )}
+                              </Tab>
+                            ))}
+                          </Tab.List>
                         </div>
-                      </RadioGroup>
+                      </Tab.Group>
                     </div>
 
                     <div className="mt-4">
